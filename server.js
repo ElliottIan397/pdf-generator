@@ -11,7 +11,10 @@ app.post("/generate-pdf", async (req, res) => {
   const { fullName, address, email, contractDate, terms } = req.body;
 
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: "new",
+    });
     const page = await browser.newPage();
 
     const html = `
