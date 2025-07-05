@@ -1,22 +1,28 @@
 const express = require("express");
-const cors = require("cors"); // ✅ Add this line
+const cors = require("cors");
 const puppeteer = require("puppeteer");
 const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors()); // ✅ Add this line to enable CORS
+app.use(cors());
 app.use(bodyParser.json({ limit: "2mb" }));
 
 app.post("/generate-pdf", async (req, res) => {
   const { fullName, address, email, contractDate, terms } = req.body;
 
   try {
+    // 👇 Add this line to get the Chromium path
+    const executablePath = puppeteer.executablePath();
+
+    // 👇 Pass executablePath into puppeteer.launch
     const browser = await puppeteer.launch({
+      executablePath,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       headless: "new",
     });
+
     const page = await browser.newPage();
 
     const html = `
