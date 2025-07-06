@@ -4,8 +4,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "puppeteer install"
+    "start": "node server.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
