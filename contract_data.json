@@ -1,0 +1,92 @@
+{
+  "Customer_Name": "Customer_103",
+  "Dealer_Name": "Your Dealer Name",
+  "Dealer_Address": "123 Dealer St.",
+  "Dealer_Phone": "(555) 123-4567",
+  "Dealer_SalesRep_Name": "Not a boss",
+  "Customer_Address_Line1": "6695 Cross Keys Road",
+  "Customer_Address_Line2": "",
+  "Customer_City": "College Grove",
+  "Customer_State": "Tennessee",
+  "Customer_Zip": "37046",
+  "Customer_Contact": "Ian M Elliott",
+  "Customer_Contact_Title": "Boss",
+  "Contract_Effective_Date": "7/5/2025",
+  "Monthly_Subscription_Fee": "307.35",
+  "Fee_DCA": "included",
+  "Fee_JIT": "$XX",
+  "Fee_QR": "$XX",
+  "Fee_SubMgmt": "included",
+  "Fee_ESW": "$XX",
+  "SKU_Bias_Option": "O",
+  "Devices_Table": [
+    {
+      "Model": "MX-4070N",
+      "Serial": "6508364600",
+      "Black_Annual_Volume": 63744,
+      "Color_Annual_Volume": 24400,
+      "Volume": 88144
+    },
+    {
+      "Model": "MX-M3571",
+      "Serial": "9502163800",
+      "Black_Annual_Volume": 80384,
+      "Color_Annual_Volume": 0,
+      "Volume": 80384
+    },
+    {
+      "Model": "AltaLink C8035",
+      "Serial": "3TX388037",
+      "Black_Annual_Volume": 32912,
+      "Color_Annual_Volume": 17616,
+      "Volume": 50528
+    },
+    {
+      "Model": "MFC-L8900CDW",
+      "Serial": "U64646J0F567695",
+      "Black_Annual_Volume": 1568,
+      "Color_Annual_Volume": 11472,
+      "Volume": 13040
+    },
+    {
+      "Model": "LaserJet M604",
+      "Serial": "CNDCK1K1VC",
+      "Black_Annual_Volume": 3968,
+      "Color_Annual_Volume": 0,
+      "Volume": 3968
+    },
+    {
+      "Model": "FS-C5250DN",
+      "Serial": "Q551702838",
+      "Black_Annual_Volume": 176,
+      "Color_Annual_Volume": 2736,
+      "Volume": 2912
+    },
+    {
+      "Model": "OfficeJet 8020",
+      "Serial": "TH21L3R1GT",
+      "Black_Annual_Volume": 784,
+      "Color_Annual_Volume": 896,
+      "Volume": 1680
+    },
+    {
+      "Model": "LaserJet M604",
+      "Serial": "CNDCJDD0QG",
+      "Black_Annual_Volume": 480,
+      "Color_Annual_Volume": 0,
+      "Volume": 480
+    }
+  ],
+  "Customer_Rep_Name": "Ian M Elliott",
+  "deviceLowerLimit": 7,
+  "deviceUpperLimit": 9,
+  "volumeLowerLimit": 18000,
+  "volumeUpperLimit": 22000,
+  "includeDCA": true,
+  "includeJITR": true,
+  "includeQR": true,
+  "includeESW": true,
+  "isO": true,
+  "isR": false,
+  "isN": false
+}

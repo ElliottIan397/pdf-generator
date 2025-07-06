@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Subscription Agreement</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 1in;
+      color: #1a1a1a;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1em;
+      font-size: 0.9em;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+      text-align: left;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 1.5em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Subscription Agreement</h1>
+  <p><strong>Customer:</strong> {{Customer_Name}}, {{Customer_Address_Line1}}, {{Customer_Address_Line2}},
+    {{Customer_City}}, {{Customer_State}}, {{Customer_Zip}}</p>
+  <p><strong>Dealer:</strong> {{Dealer_Name}}</p>
+  <p><strong>Sales Rep:</strong> {{Dealer_SalesRep_Name}}</p>
+  <p><strong>Start Date:</strong> {{Start_Date}}</p>
+
+  <p><strong>Effective Date:</strong> {{Contract_Effective_Date}}</p>
+  <p><strong>Term:</strong> 12 months, auto-renews annually until terminated.</p>
+
+  <h3>1. Software & Automation Services Included</h3>
+  <p>The following SaaS services will be provided and are integral to the auto ink and toner fulfillment:</p>
+  {{#if includeDCA}}
+  <p>&bull; <strong>Data Capture Agent (DCA) [Required] </strong><br />Continuous device connectivity and diagnostics.
+  </p>
+  {{/if}}
+  {{#if includeJITR}}
+  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional & Selected]</strong><br />Automates supply
+    replenishment and recycling.</p>
+  {{/if}}
+  <p>&bull; <strong>Subscription Management [Required]</strong><br />Billing, alerts, usage tracking.</p>
+  {{#if includeQR}}
+  <p>&bull; <strong>QR-Code Integration [Optional & Selected]</strong><br />For device tracking and reordering.</p>
+  {{/if}}
+
+  <h3>2. Extended Service Warranties (ESW) [Optional & Selected]</h3>
+  {{#if includeESW}}
+  <p>Full ESW terms apply. Reference Addendum 3.</p>
+  {{/if}}
+
+  <h3>3. Monthly Subscription Fee</h3>
+  <p>Total Monthly Fee: ${{Monthly_Subscription_Fee}} (excl. taxes)</p>
+
+  <div class="page-break"></div>
+  <h2>Addendum 1 – Covered Devices</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Serial</th>
+        <th>Annual Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Devices_Table}}
+      <tr>
+        <td>{{this.Model}}</td>
+        <td>{{this.Serial}}</td>
+        <td>{{this.Volume}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+  <h2>Addendum 2 – Output Guardrails</h2>
+  <p><strong>Overview:</strong> Guardrails define acceptable usage thresholds. Subscriptions remain unchanged if within
+    bounds.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Guardrail</th>
+        <th>Limit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{{Guardrails_Table}}}
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+  <h2>Addendum 3 – Extended Service Warranties (ESW)</h2>
+
+  {{#if includeESW}}
+  <p><strong>Overview:</strong> This addendum outlines the Service Level Agreements (SLAs) and coverage terms applicable
+    under the Extended Service Warranty program for eligible devices.</p>
+  <ul>
+    <li>Includes parts & labor for manufacturer-certified issues.</li>
+    <li>Guaranteed response time: next business day (NBD) onsite support.</li>
+    <li>Annual preventive maintenance included.</li>
+    <li>Coverage excludes consumables and user-induced damage.</li>
+  </ul>
+  {{else}}
+  <p><em>This option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
+  {{/if}}
+
+  <div class="page-break"></div>
+  <h2>Addendum 4 – SKU Bias Selection</h2>
+  <p><strong>SKU Bias Selection:</strong> Your Subscription Agreement has been configured and priced according to the
+    SKU Bias Option: {{SKU_Bias_Option}}.</p>
+
+  {{#if isO}}
+  <p><strong>OEM (Original Equipment Manufacturer) Supplies Selected:</strong></p>
+  <p>
+    This subscription is configured to use OEM toner and ink supplies. OEM products are manufactured by the original
+    brand. <br />🅾️ OEM Bias (“O”) <br />
+    The subscription program is configured with an OEM product bias. This means original manufacturer (OEM) cartridges
+    will be used as the default supply source.
+    The monthly subscription fee has been calculated based on the known availability and cost of OEM products at the
+    time of this agreement generation. In cases where an OEM cartridge has been discontinued and is no longer manufactured or
+    available from suppliers, the fallback sequence will apply in the following order: 
+  </p>
+    <ul>
+      <li>OEM [O] → Remanufactured [R]</li>
+      <li>Remanufactured [R] → New-Build Compatible [N]</li>
+    </ul>
+      <p>
+        Fallbacks are only used when a product is no longer produced by the OEM — not due to inventory issues — and
+    substitutions will be made in line with product availability from our qualified vendor network.
+  </p>
+  {{/if}}
+
+  {{#if isR}}
+  <p><strong>Remanufactured Supplies Selected:</strong></p>
+  <p>This subscription is configured to use professionally remanufactured toner and ink cartridges. These products
+    support sustainability goals and offer strong performance with cost efficiency.</p>
+  {{/if}}
+
+  {{#if isN}}
+  <p><strong>New Build Compatible Supplies Selected:</strong></p>
+  <p>This subscription is configured to use new build compatible toner and ink cartridges. These are newly manufactured
+    alternatives and meet performance standards while offering economical value.</p>
+  {{/if}}
+
+</body>
+
+</html>
