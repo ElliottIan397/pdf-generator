@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const puppeteer = require("puppeteer");
 const bodyParser = require("body-parser");
+const fs = require("fs");
+const path = require("path");
+const handlebars = require("handlebars");
+const axios = require("axios");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,54 +13,45 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "2mb" }));
 
 app.post("/generate-pdf", async (req, res) => {
-  const { fullName, address, email, contractDate, terms } = req.body;
-
   try {
-    // 👇 Add this line to get the Chromium path
-    const executablePath = puppeteer.executablePath();
+    // Load and compile HTML template
+    const templatePath = path.join(__dirname, "contract_template_minimal.html");
+    const templateHtml = fs.readFileSync(templatePath, "utf8");
+    const template = handlebars.compile(templateHtml);
 
-    // 👇 Pass executablePath into puppeteer.launch
-    const browser = await puppeteer.launch({
-      executablePath,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: "new",
-    });
+    // Guardrail table formatting
+    const data = req.body;
+    const guardrails = [
+      ["Fleet Output Avg. Mth. Lower Limit:", data.volumeLowerLimit],
+      ["Fleet Output Avg. Mth. Upper Limit:", data.volumeUpperLimit],
+      ["Device Lower Limit:", data.deviceLowerLimit],
+      ["Device Upper Limit:", data.deviceUpperLimit],
+    ];
 
-    const page = await browser.newPage();
+    data.Guardrails_Table = guardrails.map(([label, value]) => `
+      <tr>
+        <td>${label}</td>
+        <td>${value}</td>
+      </tr>
+    `).join("");
 
-    const html = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 40px; }
-            h1 { color: #333; }
-            .section { margin-bottom: 20px; }
-          </style>
-        </head>
-        <body>
-          <h1>Contract Agreement</h1>
-          <div class="section">
-            <strong>Full Name:</strong> ${fullName}<br />
-            <strong>Address:</strong> ${address}<br />
-            <strong>Email:</strong> ${email}<br />
-            <strong>Date:</strong> ${contractDate}
-          </div>
-          <div class="section">
-            <h2>Terms & Conditions</h2>
-            <p>${terms}</p>
-          </div>
-        </body>
-      </html>
-    `;
+    // Generate HTML from data
+    const html = template(data);
 
-    await page.setContent(html, { waitUntil: "networkidle0" });
-    const pdf = await page.pdf({ format: "A4" });
+    // Send to html2pdf.app
+    const response = await axios.post(
+      "https://api.html2pdf.app/v1/generate",
+      {
+        html: html,
+        apiKey: process.env.HTML2PDF_API_KEY,
+      },
+      { responseType: "arraybuffer" }
+    );
 
-    await browser.close();
-
+    // Return PDF
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=contract.pdf");
-    res.send(pdf);
+    res.send(response.data);
   } catch (err) {
     console.error("PDF generation error:", err);
     res.status(500).send("Failed to generate PDF.");
