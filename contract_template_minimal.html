@@ -51,21 +51,28 @@
   <h3>1. Software & Automation Services Included</h3>
   <p>The following SaaS services will be provided and are integral to the auto ink and toner fulfillment:</p>
   {{#if includeDCA}}
-  <p>&bull; <strong>Data Capture Agent (DCA) [Required] </strong><br />Continuous device connectivity and diagnostics.
+  <p>&bull; <strong>Data Capture Agent (DCA) [Required] </strong><br />The customer agrees to maintain continuous device
+    connectivity as required to provide fulfillment services. The DCA provides real-time monitoring of device status, usage, and
+    diagnostics.
   </p>
   {{/if}}
   {{#if includeJITR}}
-  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional & Selected]</strong><br />Automates supply
-    replenishment and recycling.</p>
+  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional]</strong><br />Automates ink/toner shipment
+    consolidation and oversees cartridge utilization and premature replacement. Also facilitates closed-loop recycling
+    of spent cartridges.</p>
+  {{else}}
+  <p><em>This option was not selected in the Subscription Agreement. The JIT-R service is not part of this subscription agreement.</em></p>    
   {{/if}}
   <p>&bull; <strong>Subscription Management [Required]</strong><br />Billing, alerts, usage tracking.</p>
   {{#if includeQR}}
-  <p>&bull; <strong>QR-Code Integration [Optional & Selected]</strong><br />For device tracking and reordering.</p>
+  <p>&bull; <strong>QR-Code Integration [Optional]</strong><br />For device tracking and reordering.</p>
   {{/if}}
 
-  <h3>2. Extended Service Warranties (ESW) [Optional & Selected]</h3>
+  <h3>2. Extended Service Warranties (ESW) [Optional]</h3>
   {{#if includeESW}}
   <p>Full ESW terms apply. Reference Addendum 3.</p>
+  {{else}}
+  <p><em>This option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
   {{/if}}
 
   <h3>3. Monthly Subscription Fee</h3>
@@ -137,15 +144,16 @@
     The subscription program is configured with an OEM product bias. This means original manufacturer (OEM) cartridges
     will be used as the default supply source.
     The monthly subscription fee has been calculated based on the known availability and cost of OEM products at the
-    time of this agreement generation. In cases where an OEM cartridge has been discontinued and is no longer manufactured or
-    available from suppliers, the fallback sequence will apply in the following order: 
+    time of this agreement generation. In cases where an OEM cartridge has been discontinued and is no longer
+    manufactured or
+    available from suppliers, the fallback sequence will apply in the following order:
   </p>
-    <ul>
-      <li>OEM [O] → Remanufactured [R]</li>
-      <li>Remanufactured [R] → New-Build Compatible [N]</li>
-    </ul>
-      <p>
-        Fallbacks are only used when a product is no longer produced by the OEM — not due to inventory issues — and
+  <ul>
+    <li>OEM [O] → Remanufactured [R]</li>
+    <li>Remanufactured [R] → New-Build Compatible [N]</li>
+  </ul>
+  <p>
+    Fallbacks are only used when a product is no longer produced by the OEM — not due to inventory issues — and
     substitutions will be made in line with product availability from our qualified vendor network.
   </p>
   {{/if}}
