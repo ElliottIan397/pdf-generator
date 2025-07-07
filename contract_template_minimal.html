@@ -5,9 +5,12 @@
   <meta charset="UTF-8" />
   <title>Subscription Agreement</title>
   <style>
+    @page {
+      margin: 1in;
+    }
+
     body {
       font-family: sans-serif;
-      margin: 1in;
       color: #1a1a1a;
     }
 
@@ -40,22 +43,50 @@
 <body>
   <h1>Subscription Agreement</h1>
   <p><strong>Customer:</strong> {{Customer_Name}}</p>
-  <p><strong>Address:</strong> {{Customer_Address_Line1}}, {{Customer_Address_Line2}}, {{Customer_City}}, {{Customer_State}}, {{Customer_Zip}}</p>
-  <p><strong>Dealer:</strong> {{Dealer_Name}}</p>
+  <p><strong>Customer Address:</strong> {{Customer_Address_Line1}}, {{Customer_Address_Line2}}, {{Customer_City}},
+    {{Customer_State}}, {{Customer_Zip}}</p>
   <p><strong>Sales Rep:</strong> {{Dealer_SalesRep_Name}}</p>
-  <p><strong>Start Date:</strong> {{Start_Date}}</p>
+  <p><strong>Total Monthly Fee:</strong> ${{Monthly_Subscription_Fee}} (excl. taxes)</p>
 
   <p><strong>Effective Date:</strong> {{Contract_Effective_Date}}</p>
   <p><strong>Term:</strong> 12 months, auto-renews for successive 12-month periods until terminated.</p>
 
-  <h3>1. Software & Automation Services Included</h3>
-  <p>The following SaaS features will be provided and are integral to the auto ink and toner fulfillment subscription
-    program:</p>
+  <h3>Preamble</h3>
+  <p>This Subscription Agreement (“Agreement”) is entered into between the undersigned customer (“Customer”) and the
+    authorized service provider or dealer (“Dealer”). The Agreement outlines the terms and conditions under which the
+    Dealer will provide automated fulfillment services, subscription software tools, and related support for printing
+    supplies and device monitoring. By executing this Agreement, the Customer agrees to the terms herein and
+    acknowledges their intent to participate in a subscription-based fulfillment program designed to simplify
+    operational workflows, manage supply logistics, and ensure service continuity.</p>
+
+  <h3> Defined Terms</h3>
+  <p>For purposes of this Agreement, the following capitalized terms shall have the meanings set forth below:<br />
+  <ul>
+    <li><strong>“Customer”</strong> means the individual or entity subscribing to the services as identified in this
+      Agreement.</li>
+    <li><strong>“Dealer”</strong> means the authorized provider responsible for managing the subscription, billing, and
+      fulfillment services.</li>
+    <li><strong>“Effective Date”</strong> refers to the date this Agreement becomes enforceable.</li>
+    <li><strong>“Subscription Services”</strong> refers to the bundle of software, automation tools, and fulfillment
+      processes provided to the Customer.</li>
+    <li><strong>“Devices”</strong> means the printers or multifunction devices listed in Addendum 1 as covered under
+      this subscription.</li>
+    <li><strong>“Guardrails”</strong> refers to usage limits or thresholds that guide service scope and subscription
+      pricing, as described in Addendum 2.</li>
+    <li><strong>“SKU Bias”</strong> defines the Customer’s supply type preference (OEM, Remanufactured, or Compatible)
+      as outlined in Addendum 4.</li>
+    <li><strong>“ESW”</strong> stands for Extended Service Warranties, optional coverage as detailed in Addendum 3.</li>
+
+  </ul>
+  </p>
+
+  <h3>1. Software & Automation Services</h3>
+  <p>The following SaaS features will be provided and are integral to the automated ink and toner replenishment (ATR)
+    subscription program:</p>
   {{#if includeDCA}}
   <p>&bull; <strong>Data Capture Agent (DCA) [Required] </strong><br />
-    The customer agrees to maintain continuous device connectivity as required to provide fulfillment services. The DCA
-    provides real-time monitoring of device status,
-    usage, and diagnostics.
+    {{Customer_Name}} agrees to maintain continuous device connectivity as required to provide fulfillment services. The
+    DCA provides real-time monitoring of device status, usage, and diagnostics.
   </p>
   {{/if}}
   {{#if includeJITR}}
@@ -70,20 +101,151 @@
       agreement.</em>
   </p>
   {{/if}}
-  <p>&bull; <strong>Subscription Management [Required]</strong><br />Billing, alerts, usage tracking.</p>
   {{#if includeQR}}
-  <p>&bull; <strong>QR-Code Integration [Optional]</strong><br />For device tracking and reordering.</p>
+  <p>&bull; <strong>Quick Response (QR) Asset Management [Optional]</strong><br />
+    Attaching QR labels to Printer & Copier assets facilitates instant messaging for unexpected ink or toner
+    requirements or for ticketing in the event of a machine breakdown requiring a service technician assistance.
+  </p>
+  {{else}}
+  <p>&bull; <strong>Quick Response (QR) Asset Management [Optional]</strong><br />
+    <em>This option was not selected in the Subscription Agreement. The QR service is not part of this subscription
+      agreement.</em>
+  </p>
   {{/if}}
-
   <h3>2. Extended Service Warranties (ESW) [Optional]</h3>
   {{#if includeESW}}
-  <p>Full ESW terms apply. Reference Addendum 3.</p>
+  <p>The Extended Service Warranty (ESW) provides repair and maintenance coverage for the printers and copiers covered
+    under this subscription agreement.</p>
+  <ul>
+    <li>ESWs are assigned to specific devices based on serial number and are included in
+      the Subscription Monthly Fee with coverage commencing on the date of the execution of this Subscription Agreement.
+    </li>
+    <li>The ESW includes on-site or depot repair service for hardware malfunctions under normal operating conditions,
+      excluding installations, upgrades, consumables, user abuse, or environmental damage. Service is available Monday
+      through Friday, 8:00 AM – 5:00 PM local time, with triage and response times based on issue severity.</li>
+    <li>On-site coverage is limited to service areas within 50 miles of a metro region.</li>
+  </ul>
+  Full ESW terms and Service Level Agreements are provided in the Addendum 3 to this Agreement.
+  </p>
   {{else}}
   <p><em>This option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
   {{/if}}
 
-  <h3>3. Monthly Subscription Fee</h3>
-  <p>Total Monthly Fee: ${{Monthly_Subscription_Fee}} (excl. taxes)</p>
+  <h3>3. Monthly Subscription Plan</h3>
+  <p>The Subscription Plan is a comprehensive, all-inclusive program that automates the fulfillment of ink and toner
+    supplies for enrolled printing devices. It leverages real-time monitoring through a Data Capture Agent (DCA),
+    enabling predictive replenishment and proactive service. Optional services such as Just-in-Time Replenishment
+    (JIT-R), QR-code tracking, and Extended Service Warranties (ESW) enhance operational reliability and sustainability.
+  </p>
+  <ul>
+    <li>This subscription is tailored to your specific fleet, usage patterns, and supply preferences, including
+      OEM, remanufactured, or compatible cartridges.</li>
+    <li>The agreement includes a fixed monthly fee based on covered devices, service selections, and agreed output
+      thresholds ("guardrails").</li>
+    <li>The agreement is designed to reduce supply chain friction, ensure consistent uptime, and simplify print
+      management for your businesses.</li>
+  </ul>
+  Terms are transparent and auto-renew annually unless otherwise terminated.</p>
+
+  <h3>4. Quarterly Business Review (QBR) & Guardrails Overview</h3>
+  <p>As part of the Subscription Agreement, the Quarterly Business Review (QBR) ensures transparency, accountability,
+    and alignment between customer usage patterns and contracted expectations. Each quarter, device-level and fleet-wide
+    performance metrics are evaluated against defined output guardrails.</p>
+  <ul>
+    <li>These guardrails have been calculated according to your historical printing output patterns and establish your
+      thresholds for monthly page volume and device count.</li>
+    <li>If usage remains within these limits on a rolling 90-day average throughout the term, no changes are made to
+      this agreement.</li>
+    <li>If deviations are detected — either sustained overuse or underutilization — recommendations will be
+      presented to right-size the subscription.</li>
+    <li>These recommendations could include adjusting the subscription tier, to compensate for changes in output volume
+      or the fleet size.</li>
+  </ul>
+  The QBR process supports a proactive service model that balances cost efficiency, service quality, and contract
+  integrity, ensuring the subscription continues to meet the evolving needs of the customer without surprises. The
+  guardrails associated with this Subscription Agreement are detailed in Addendum 2.</p>
+
+  <h3>5. Billing & Payment</h3>
+  <p>Subscription fees are billed monthly in advance and are payable by credit card. By mutual agreement, ACH (Automated
+    Clearing House) payments may be arranged as an alternative payment method.<br />
+  <ul>
+    <li>All invoices are due upon receipt. If payment is not received within 15 days of the due date, the Dealer
+      reserves the right to suspend or terminate fulfillment services until the account is brought current.</li>
+    <li>A late payment notice will be issued before any service interruption, providing {{Customer_Name}} with a
+      reasonable opportunity to correct the issue.</li>
+    <li>It is the responsibility of {{Customer_Name}} to ensure payment methods remain valid and up to date. Any
+      interrupted services resulting from non-payment will resume promptly upon resolution.</li>
+  </ul>
+  </p>
+
+  <h3>6. Term & Termination</h3>
+  <p>This Agreement shall commence on the Effective Date and remain in effect for an initial term of twelve (12) months.
+    Thereafter, it will automatically renew on an annual basis unless terminated by either party with thirty (30) days'
+    written notice prior to the renewal date (“evergreen” renewal).<br />
+  <ul>
+    <li>Either party may terminate this Agreement at any time for cause, including but not limited to material breach,
+      failure to meet payment obligations, or misuse of services, provided written notice is given and a 15-day
+      opportunity to cure the issue is granted.</li>
+    <li>If the issue remains unresolved after the correction period, termination
+      may proceed at the sole discretion of the non-breaching party.</li> <br />
+  </ul>
+  Upon termination, services and obligations will cease except those that, by their nature, are intended to survive,
+  such as outstanding payments and confidentiality obligations.
+  </p>
+
+  <h3>7. Freight & Fulfillment Terms</h3>
+  <p><strong>Freight Costs:</strong><br />
+    All standard shipping and freight costs associated with the delivery of subscription-related supplies are included
+    in the monthly subscription fee. Expedited or special delivery services requested by the Customer may incur
+    additional charges.</p>
+  <p><strong>Fulfillment Protocols:</strong><br />
+    The fulfillment of ink and toner supplies is automated based on device monitoring. Thresholds are determined by
+    either the number of days remaining or percentage remaining, depending on the specific device’s tracking
+    capabilities. Our goal is to optimize cartridge usage and prevent premature replacement.</p>
+  <p>To support accurate fulfillment and reduce loss:</p>
+  <ul>
+    <li>Customers are encouraged to provide the name and email address of the individual responsible for each device.
+    </li>
+    <li>This allows us to issue timely delivery notifications and reduce the incidence of misplaced or unclaimed
+      supplies.</li>
+    <li>It is common for devices to display low-toner warnings at levels such as 15–20%. These alerts are often
+      triggered prematurely by OEM firmware.</li>
+    <li>The program is designed to help users confidently run cartridges to true depletion, minimizing waste and
+      avoiding unnecessary shipments.</li>
+  </ul>
+  <p>Customers agree to make best efforts to follow this approach, as repeated premature replacements may result in
+    inventory inefficiencies and increased fulfillment frequency.
+  </p>
+
+  <h3>8. General Terms</h3>
+  <p><strong>Confidentiality:</strong><br />
+    Each party agrees to keep proprietary and non-public business information confidential and to use it solely for
+    purposes related to this agreement.</p>
+  <p><strong>Data Ownership & Privacy:</strong><br />
+    Customer retains ownership of all device, usage, and business data. We do not sell or share data. Data is used only
+    to deliver contracted services in accordance with applicable privacy laws.</p>
+  <p><strong>Limitation of Liability:</strong><br />
+    Our liability under this agreement is limited to direct damages not exceeding the total fees paid by the customer in
+    the prior 12 months. We are not liable for indirect, incidental, or consequential losses.</p>
+  <p><strong>Governing Law:</strong><br />
+    This agreement is governed by the laws of the state in which the customer operates, unless otherwise mutually
+    agreed.</p>
+  <p><strong>Assignment & Integration:</strong><br />
+    This agreement may not be transferred without consent. It reflects the entire understanding between the parties and
+    supersedes prior communications or agreements.</p>
+  <p><strong>Force Majeure:</strong><br />
+    Neither party is liable for delays or failures due to causes beyond reasonable control, such as natural disasters,
+    labor disputes, or internet outages.</p>
+
+  <h3>9. Agreement Acknowledgement</h3>
+  <p>By executing this Subscription Agreement, the Customer confirms that they have reviewed and understood the terms
+    herein, including all referenced addenda. This Agreement represents the full understanding between the parties and
+    supersedes all prior proposals, representations, or agreements related to the subscription services described. The
+    parties agree to act in good faith to fulfill the intent and obligations outlined, and acknowledge that this
+    Agreement is effective as of the Agreement Effective Date.</p>
+
+  <div class="page-break"></div>
+  <h3>Signature Page – Subscription Agreement</h3>
 
   <div class="page-break"></div>
   <h2>Addendum 1 – Covered Devices</h2>
@@ -107,7 +269,7 @@
   </table>
 
   <div class="page-break"></div>
-  <h2>Addendum 2 – Output Guardrails</h2>
+  <h2>Addendum 2 – Device & Output Guardrails</h2>
   <p><strong>Overview:</strong> Guardrails define acceptable usage thresholds. Subscriptions remain unchanged if within
     bounds.</p>
   <table>
@@ -147,8 +309,9 @@
   <p><strong>OEM (Original Equipment Manufacturer) Supplies Selected:</strong></p>
   <p>
     This subscription is configured to use OEM toner and ink supplies. OEM products are manufactured by the original
-    brand.
-    <br /><strong>OEM Bias (“O”)</strong><br />
+    brand.<br />
+    <strong>OEM Bias (“O”)</strong>
+    <br />
     The subscription program is configured with an OEM product bias. This means original manufacturer (OEM) cartridges
     will be used as the default supply source.
     The monthly subscription fee has been calculated based on the known availability and cost of OEM products at the
