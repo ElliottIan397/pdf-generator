@@ -39,17 +39,17 @@
 
 <body>
   <h1>Subscription Agreement</h1>
-  <p><strong>Customer:</strong> {{Customer_Name}}, {{Customer_Address_Line1}}, {{Customer_Address_Line2}},
-    {{Customer_City}}, {{Customer_State}}, {{Customer_Zip}}</p>
+  <p><strong>Customer:</strong> {{Customer_Name}}</p>
+  <p><strong>Address:</strong> {{Customer_Address_Line1}}, {{Customer_Address_Line2}}, {{Customer_City}}, {{Customer_State}}, {{Customer_Zip}}</p>
   <p><strong>Dealer:</strong> {{Dealer_Name}}</p>
   <p><strong>Sales Rep:</strong> {{Dealer_SalesRep_Name}}</p>
   <p><strong>Start Date:</strong> {{Start_Date}}</p>
 
   <p><strong>Effective Date:</strong> {{Contract_Effective_Date}}</p>
-  <p><strong>Term:</strong> 12 months, auto-renews annually until terminated.</p>
+  <p><strong>Term:</strong> 12 months, auto-renews for successive 12-month periods until terminated.</p>
 
   <h3>1. Software & Automation Services Included</h3>
-  <p>The following SaaS services will be provided and are integral to the auto ink and toner fulfillment subscription
+  <p>The following SaaS features will be provided and are integral to the auto ink and toner fulfillment subscription
     program:</p>
   {{#if includeDCA}}
   <p>&bull; <strong>Data Capture Agent (DCA) [Required] </strong><br />
@@ -59,13 +59,16 @@
   </p>
   {{/if}}
   {{#if includeJITR}}
-  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional]</strong><br />Automates ink/toner shipment
-    consolidation and oversees cartridge utilization and premature replacement. Also facilitates closed-loop recycling
-    of spent cartridges.</p>
+  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional]</strong><br />
+    Automates ink/toner shipment consolidation and oversees cartridge utilization and premature replacement. Also
+    facilitates closed-loop recycling
+    of spent cartridges.
+  </p>
   {{else}}
-  <p><em>p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional]</strong><br />
-      This option was not selected in the Subscription Agreement. The JIT-R service is not part of this subscription
-      agreement.</em></p>
+  <p>&bull; <strong>Just-in-Time Replenishment (JIT-R) [Optional]</strong><br />
+    <em>This option was not selected in the Subscription Agreement. The JIT-R service is not part of this subscription
+      agreement.</em>
+  </p>
   {{/if}}
   <p>&bull; <strong>Subscription Management [Required]</strong><br />Billing, alerts, usage tracking.</p>
   {{#if includeQR}}
@@ -145,12 +148,12 @@
   <p>
     This subscription is configured to use OEM toner and ink supplies. OEM products are manufactured by the original
     brand.
-    <br />OEM Bias (“O”) <br />
+    <br /><strong>OEM Bias (“O”)</strong><br />
     The subscription program is configured with an OEM product bias. This means original manufacturer (OEM) cartridges
     will be used as the default supply source.
     The monthly subscription fee has been calculated based on the known availability and cost of OEM products at the
     time of this agreement generation. In cases where an OEM cartridge has been discontinued and is no longer
-    manufactured or available from suppliers, the fallback sequence will apply in the following order:
+    manufactured or available from suppliers, the fallback sequence has been applied in the following order:
   </p>
   <ul>
     <li>OEM [O] → Remanufactured [R]</li>
@@ -166,11 +169,11 @@
   <p><strong>Remanufactured Supplies Selected:</strong></p>
   <p>The subscription program is configured with a Remanufactured OEM (R) bias. This means cartridges that have been
     remanufactured from original OEM cores are the preferred supply type.
-    <br />Remanufactured OEM (“R”) Bias<br />
+    <br /><strong>Remanufactured OEM (“R”) Bias</strong><br />
     The monthly subscription fee has been calculated based on the known availability and cost of remanufactured OEM
     products known to the dealer at the time of this agreement generation.
     In cases where a remanufactured product is not available, due to lack of manufacturing or product coverage, the
-    fallback sequence will apply in the following order:
+    fallback sequence has been applied in the following order:
   <ul>
     <li>Remanufactured [R] → New-Build Compatible [N]</li>
     <li>New-Build Compatible [N] → OEM [O]</li>
@@ -186,12 +189,12 @@
   <p><strong>New Build Compatible Supplies Selected:</strong></p>
   <p>The subscription program is configured with a New Build Compatible (N) bias. This means newly manufactured,
     non-OEM cartridges are the preferred supply source.
-    <br />New Build Compatible (“N”) Bias<br />
+    <br /><strong>New-Build Compatible (“N”) Bias</strong><br />
     The monthly subscription fee has been calculated based on the known availability and cost of New-Build (non-OEM)
     compatible cartridges
     known to the dealer at the time of this agreement generation.
     In cases where a New-Build product is not available, due to lack of manufacturing or product coverage, the
-    fallback sequence will apply in the following order:
+    fallback sequence has been applied in the following order:
   <ul>
     <li>New-Build Compatible [N] → Remanufactured [R]</li>
     <li>Remanufactured [R] → OEM [O]</li>
