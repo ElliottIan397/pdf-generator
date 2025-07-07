@@ -283,7 +283,17 @@
       </tr>
     </thead>
     <tbody>
-      {{{Devices_Table}}}
+      {{#each Devices_Table}}
+      <tr>
+        <td>{{this.Model}}</td>
+        <td>{{this.Serial}}</td>
+        <td>{{this.Volume}}</td>
+        <td>{{this.Black_Bias}}</td>
+        <td>{{this.Cyan_Bias}}</td>
+        <td>{{this.Magenta_Bias}}</td>
+        <td>{{this.Yellow_Bias}}</td>
+      </tr>
+      {{/each}}
     </tbody>
   </table>
 
