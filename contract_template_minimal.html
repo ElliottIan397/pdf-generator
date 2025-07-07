@@ -246,6 +246,27 @@
 
   <div class="page-break"></div>
   <h3>Signature Page – Subscription Agreement</h3>
+  <h4> Dealer Authorized Signatory</h4>
+  <p>Name: {{Dealer_SalesRep_Name}}</p><br />
+  <p>Signature: ________________________ Date: {{Contract_Effective_Date}} </p><br />
+  <h4> Customer Authorized Signatory</h4>
+  <p>Name: {{Customer_Rep_Name}}</p><br />
+  <p>Signature: ________________________ Date: {{Contract_Effective_Date}} </p><br />
+
+  <div class="page-break"></div>
+  <h2>Addenda</h2>
+  <p><em>Addendum 1: Customer Print Devices</em></p>
+  <p>List of covered devices my model, serial number, sorted in descending order of annual volume</p><br />
+  <p><em>Addendum 2: Usage Guardrails & QBR</em></p>
+  <p>Quarterly review of device count and print volume based on rolling 90-day data.</p><br />
+  <p><em>Addendum 3: Extended Service Warranties & SLAs</em></p>
+  {{#if includeESW}}
+  <p>Service Level Agreements with response times, scope, & exclusions.</p><br />
+  {{else}}
+  <p><em>This option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
+  {{/if}}
+  <p><em>Addendum 4: SKU Bias Terms</em></p>
+  <p>Defines how cartridge variants have been determined.</p>
 
   <div class="page-break"></div>
   <h2>Addendum 1 – Covered Devices</h2>
@@ -255,16 +276,14 @@
         <th>Model</th>
         <th>Serial</th>
         <th>Annual Volume</th>
+        <th>Black Bias</th>
+        <th>Cyan Bias</th>
+        <th>Magenta Bias</th>
+        <th>Yellow Bias</th>
       </tr>
     </thead>
     <tbody>
-      {{#each Devices_Table}}
-      <tr>
-        <td>{{this.Model}}</td>
-        <td>{{this.Serial}}</td>
-        <td>{{this.Volume}}</td>
-      </tr>
-      {{/each}}
+      {{{Devices_Table}}}
     </tbody>
   </table>
 
