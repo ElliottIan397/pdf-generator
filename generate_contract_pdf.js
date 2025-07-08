@@ -3,6 +3,7 @@ require('dotenv').config(); // Load environment variables
 const fs = require('fs');
 const path = require('path');
 const handlebars = require('handlebars');
+const axios = require('axios');
 
 async function generatePDF() {
   // Load HTML template
@@ -12,64 +13,51 @@ async function generatePDF() {
   // Compile with Handlebars
   const template = handlebars.compile(templateHtml);
 
-const data = require('./contract_data.json');
+  // Load contract data
+  const data = require('./contract_data.json');
 
-const biasKey = data.SKU_Bias_Option; // "O", "R", or "N"
+  // Sort devices by annual volume and format volume number
+  data.Devices_Table = data.Devices_Table
+    .sort((a, b) => b.Volume - a.Volume)
+    .map(device => ({
+      ...device,
+      Volume: device.Volume.toLocaleString(),
+      Black_Bias: device.Black_Bias || "N/A",
+      Cyan_Bias: device.Cyan_Bias || "N/A",
+      Magenta_Bias: device.Magenta_Bias || "N/A",
+      Yellow_Bias: device.Yellow_Bias || "N/A"
+    }));
 
-// Add individual bias columns for C/M/Y/K
-data.Devices_Table = data.Devices_Table.map(device => ({
-  ...device,
-  Black_Bias: device[`Black_Bias_${biasKey}`],
-  Cyan_Bias: device[`Cyan_Bias_${biasKey}`],
-  Magenta_Bias: device[`Magenta_Bias_${biasKey}`],
-  Yellow_Bias: device[`Yellow_Bias_${biasKey}`],
-}));
+  // Guardrails table rendering
+  const guardrails = [
+    ["Fleet Output Avg. Mth. Lower Limit:", data.volumeLowerLimit],
+    ["Fleet Output Avg. Mth. Upper Limit:", data.volumeUpperLimit],
+    ["Device Lower Limit:", data.deviceLowerLimit],
+    ["Device Upper Limit:", data.deviceUpperLimit],
+  ];
 
-// Sort devices by annual volume (descending)
-data.Devices_Table = data.Devices_Table
-  .sort((a, b) => b.Volume - a.Volume)
-  .map(device => ({
-    ...device,
-    Volume: device.Volume.toLocaleString(),
-    Black_Bias: device[`Black_Bias_${biasKey}`] || "N/A",
-    Cyan_Bias: device[`Cyan_Bias_${biasKey}`] || "N/A",
-    Magenta_Bias: device[`Magenta_Bias_${biasKey}`] || "N/A",
-    Yellow_Bias: device[`Yellow_Bias_${biasKey}`] || "N/A",
-  }));
+  data.Guardrails_Table = guardrails.map(([label, value]) => `
+    <tr>
+      <td>${label}</td>
+      <td>${value}</td>
+    </tr>
+  `).join('');
 
-const guardrails = [
-  ["Fleet Output Avg. Mth. Lower Limit:", data.volumeLowerLimit],
-  ["Fleet Output Avg. Mth. Upper Limit:", data.volumeUpperLimit],
-  ["Device Lower Limit:", data.deviceLowerLimit],
-  ["Device Upper Limit:", data.deviceUpperLimit],
-];
-
-data.Guardrails_Table = guardrails.map(([label, value]) => `
-  <tr>
-    <td>${label}</td>
-    <td>${value}</td>
-  </tr>
-`).join('');
-
-  // Inject data
+  // Render final HTML
   const html = template(data);
 
-const axios = require('axios');
+  // Generate PDF
+  const response = await axios.post(
+    'https://api.html2pdf.app/v1/generate',
+    {
+      html: html,
+      apiKey: process.env.HTML2PDF_API_KEY,
+    },
+    { responseType: 'arraybuffer' }
+  );
 
-// Send HTML to html2pdf.app and save PDF
-const response = await axios.post(
-  'https://api.html2pdf.app/v1/generate',
-  {
-    html: html,
-    apiKey: process.env.HTML2PDF_API_KEY,
-  },
-  { responseType: 'arraybuffer' }
-);
-
-// Save PDF to file
-fs.writeFileSync('Subscription_Contract.pdf', response.data);
-console.log('✅ PDF generated via html2pdf.app: Subscription_Contract.pdf');
-
+  fs.writeFileSync('Subscription_Contract.pdf', response.data);
+  console.log('✅ PDF generated via html2pdf.app: Subscription_Contract.pdf');
 }
 
 generatePDF().catch(console.error);
