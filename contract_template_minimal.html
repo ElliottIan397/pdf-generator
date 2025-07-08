@@ -276,10 +276,10 @@
         <th>Model</th>
         <th>Serial</th>
         <th>Annual Volume</th>
-        <th>Black Bias</th>
-        <th>Cyan Bias</th>
-        <th>Magenta Bias</th>
-        <th>Yellow Bias</th>
+        <th style="text-align: center;">Black Bias</th>
+        <th style="text-align: center;">Cyan Bias</th>
+        <th style="text-align: center;">Magenta Bias</th>
+        <th style="text-align: center;">Yellow Bias</th>
       </tr>
     </thead>
     <tbody>
@@ -287,11 +287,11 @@
       <tr>
         <td>{{this.Model}}</td>
         <td>{{this.Serial}}</td>
-        <td>{{this.Volume}}</td>
-        <td>{{this.Black_Bias}}</td>
-        <td>{{this.Cyan_Bias}}</td>
-        <td>{{this.Magenta_Bias}}</td>
-        <td>{{this.Yellow_Bias}}</td>
+        <td>{{VolumeFormatted}}</td>
+        <td style="text-align: center;">{{Black_Bias}}</td>
+        <td style="text-align: center;">{{Cyan_Bias}}</td>
+        <td style="text-align: center;">{{Magenta_Bias}}</td>
+        <td style="text-align: center;">{{Yellow_Bias}}</td>
       </tr>
       {{/each}}
     </tbody>
