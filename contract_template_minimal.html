@@ -74,8 +74,8 @@
     <li><strong>“Guardrails”</strong> refers to usage limits or thresholds that guide service scope and subscription
       pricing, as described in Addendum 2.</li>
     <li><strong>“SKU Bias”</strong> defines the Customer’s supply type preference (OEM, Remanufactured, or Compatible)
-      as outlined in Addendum 4.</li>
-    <li><strong>“ESW”</strong> stands for Extended Service Warranties, optional coverage as detailed in Addendum 3.</li>
+      as outlined in Addendum 1.</li>
+    <li><strong>“ESW”</strong> stands for Extended Service Warranties, optional coverage as detailed in Addendum 4.</li>
 
   </ul>
   </p>
@@ -255,11 +255,13 @@
 
   <div class="page-break"></div>
   <h2>Addenda</h2>
-  <p><em>Addendum 1: Customer Print Devices</em></p>
+  <p><em>Addendum 1: SKU Bias Terms</em></p>
+  <p>Defines how cartridge variants have been determined.</p>
+  <p><em>Addendum 2: Customer Print Devices</em></p>
   <p>List of covered devices my model, serial number, sorted in descending order of annual volume</p><br />
-  <p><em>Addendum 2: Usage Guardrails & QBR</em></p>
+  <p><em>Addendum 3: Usage Guardrails & QBR</em></p>
   <p>Quarterly review of device count and print volume based on rolling 90-day data.</p><br />
-  <p><em>Addendum 3: Extended Service Warranties & SLAs</em></p>
+  <p><em>Addendum 4: Extended Service Warranties & SLAs</em></p>
   {{#if includeESW}}
   <p>Service Level Agreements with response times, scope, & exclusions.</p><br />
   {{else}}
@@ -269,68 +271,7 @@
   <p>Defines how cartridge variants have been determined.</p>
 
   <div class="page-break"></div>
-  <h2>Addendum 1 – Covered Devices</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Model</th>
-        <th>Serial</th>
-        <th>Annual Volume</th>
-        <th style="text-align: center;">Black Bias</th>
-        <th style="text-align: center;">Cyan Bias</th>
-        <th style="text-align: center;">Magenta Bias</th>
-        <th style="text-align: center;">Yellow Bias</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each Devices_Table}}
-      <tr>
-        <td>{{this.Model}}</td>
-        <td>{{this.Serial}}</td>
-        <td>{{VolumeFormatted}}</td>
-        <td style="text-align: center;">{{Black_Bias}}</td>
-        <td style="text-align: center;">{{Cyan_Bias}}</td>
-        <td style="text-align: center;">{{Magenta_Bias}}</td>
-        <td style="text-align: center;">{{Yellow_Bias}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-
-  <div class="page-break"></div>
-  <h2>Addendum 2 – Device & Output Guardrails</h2>
-  <p><strong>Overview:</strong> Guardrails define acceptable usage thresholds. Subscriptions remain unchanged if within
-    bounds.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Guardrail</th>
-        <th>Limit</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{{Guardrails_Table}}}
-    </tbody>
-  </table>
-
-  <div class="page-break"></div>
-  <h2>Addendum 3 – Extended Service Warranties (ESW)</h2>
-
-  {{#if includeESW}}
-  <p><strong>Overview:</strong> This addendum outlines the Service Level Agreements (SLAs) and coverage terms applicable
-    under the Extended Service Warranty program for eligible devices.</p>
-  <ul>
-    <li>Includes parts & labor for manufacturer-certified issues.</li>
-    <li>Guaranteed response time: next business day (NBD) onsite support.</li>
-    <li>Annual preventive maintenance included.</li>
-    <li>Coverage excludes consumables and user-induced damage.</li>
-  </ul>
-  {{else}}
-  <p><em>This option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
-  {{/if}}
-
-  <div class="page-break"></div>
-  <h2>Addendum 4 – SKU Bias Selection</h2>
+  <h2>Addendum 1 – SKU Bias Selection</h2>
   <p><strong>SKU Bias Selection:</strong> Your Subscription Agreement has been configured and priced according to the
     SKU Bias Option: {{SKU_Bias_Option}}.</p>
 
@@ -396,6 +337,166 @@
     management issues — and substitutions will be made in line with product availability from our qualified vendor
     network.
   </p>
+  {{/if}}
+
+  <div class="page-break"></div>
+  <h2>Addendum 2 – Covered Devices</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Serial</th>
+        <th>Annual Volume</th>
+        <th style="text-align: center;">Black Bias</th>
+        <th style="text-align: center;">Cyan Bias</th>
+        <th style="text-align: center;">Magenta Bias</th>
+        <th style="text-align: center;">Yellow Bias</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Devices_Table}}
+      <tr>
+        <td>{{this.Model}}</td>
+        <td>{{this.Serial}}</td>
+        <td>{{VolumeFormatted}}</td>
+        <td style="text-align: center;">{{Black_Bias}}</td>
+        <td style="text-align: center;">{{Cyan_Bias}}</td>
+        <td style="text-align: center;">{{Magenta_Bias}}</td>
+        <td style="text-align: center;">{{Yellow_Bias}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+  <h2>Addendum 3 – Device & Output Guardrails</h2>
+  <p><strong>Overview:</strong> Guardrails define acceptable usage thresholds. Subscriptions remain unchanged if within
+    bounds.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Guardrail</th>
+        <th>Limit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{{Guardrails_Table}}}
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+  {{#if includeESW}}
+  <h2>Addendum 4 – Extended Service Warranties (ESW)</h2>
+  <p><strong>Overview:</strong> This addendum outlines the Service Level Agreements (SLAs) and coverage terms applicable
+    under the Extended Service Warranty program for eligible devices.</p>
+
+  <p>1. Service Scope & Exclusions:</p>
+  <ul>
+    <li>Repair services do not include new installations, upgrades, relocations, or damage caused by user abuse.</li>
+    <li>Service is limited to repair and maintenance of covered devices under normal operational conditions.</li>
+  </ul>
+
+  <p>2. Service Location & Availability:</p>
+  <ul>
+    <li>On-site repair is available within 50 miles of a city metro.</li>
+    <li>Devices outside the 50-mile range are eligible for Depot Repair services, determined prior to Subscription
+      Agreement.</li>
+
+    <li>
+      All service requests must be made via:
+      <ul>
+        <li>Telephone: 1-800-652-6835</li>
+        <li>Email: support@amtek.net</li>
+        {{#if includeQR}}
+        <li>Scan Device QR</li>
+        {{/if}}
+      </ul>
+    </li>
+
+    <li>Service hours: Monday – Friday, 8:00 AM – 5:00 PM (local time zone).</li>
+  </ul>
+  <p>3. Priority Levels & Response Times:</p>
+  <ul>
+    <li>
+      Priority A: Minor disruptions affecting copiers and networked MFPs.
+      <ul>
+        <li>Triage by phone within 1 hour. Best effort resolution within one business day.</li>
+      </ul>
+    </li>
+    <li>
+      Priority B: Minor disruptions affecting desktop printers.
+      <ul>
+        <li>Triage by phone within 1 hour. Best effort resolution within two business days.</li>
+      </ul>
+    </li>
+  </ul>
+  <p>4. ESW Service Exclusions:</p>
+  <ul>
+    <li>Software troubleshooting or reloading.</li>
+    <li>Adding, removing, or updating accessories or attachments.</li>
+    <li>User abuse or misuse.</li>
+    <li>Repairs due to failure to follow original manufacturer operating instructions.</li>
+    <li>Repairs required due to external forces (e.g., fire, flooding, power surges, HVAC failures).</li>
+    <li>Replacement of consumables (e.g., staplers, finishers, stackers, paper, ribbons, ink/toner, transfer belts,
+      maintenance kits).</li>
+    <li>Service requests due to computer viruses, malware, or spyware.</li>
+  </ul>
+  <p>5. Contractor Insurance Provisions:</p>
+  <ul>
+    <li>The Contractor Service company shall maintain and carry the following insurance coverage:</li>
+    <li>Commercial General Liability: Minimum $1M.</li>
+    <li>Automobile Insurance: Minimum $1M.</li>
+    <li>Workers’ Compensation: Minimum $1M.</li>
+  </ul>
+  {{else}}
+  <h2>Addendum 4 – Service & Repair (Time & Materials)</h2>
+  <p><em>The ESW option was not selected in the Subscription Agreement. No ESW coverage applies.</em></p>
+  <p><strong>Overview:</strong> This addendum outlines the Service & Repair options available if ESW coverage has been
+    declined.</p>
+  <p>1. Service Location & Availability:</p>
+  <ul>
+    <li>On-site repair is available within 50 miles of a city metro.</li>
+    <li>Devices outside the 50-mile range are eligible for Depot Repair services.</li>
+    <li>
+      All service requests must be made via:
+      <ul>
+        <li>Telephone: 1-800-652-6835</li>
+        <li>Email: support@amtek.net</li>
+        {{#if includeQR}}
+        <li>Scan Device QR</li>
+        {{/if}}
+      </ul>
+    </li>
+    <li>Service hours: Monday – Friday, 8:00 AM – 5:00 PM (local time zone).</li>
+  </ul>
+  <p>2. Priority Levels & Response Times:</p>
+  <ul>
+    <li>
+      Priority A: Minor disruptions affecting copiers and networked MFPs.
+      <ul>
+        <li>Triage by phone within 1 hour. Best effort resolution within one business day.</li>
+      </ul>
+    </li>
+    <li>
+      Priority B: Minor disruptions affecting desktop printers.
+      <ul>
+        <li>Triage by phone within 1 hour. Best effort resolution within two business days.</li>
+      </ul>
+    </li>
+  </ul>
+  <p>3. Time & Materials Pricing:</p>
+  <ul>
+    <li>• Monday – Friday (8:00 AM – 5:00 PM): $125 per hour (portal-to-portal plus on-site time).</li>
+    <li>• Monday – Friday (5:00 PM – 10:00 PM): $185 per hour (portal-to-portal plus on-site time).</li>
+    <li>• Saturday – Sunday (8:00 AM – 5:00 PM): $200 per hour (portal-to-portal plus on-site time).</li>
+  </ul>
+  <p>4. Contractor Insurance Provisions:</p>
+  <ul>
+    <li>The Contractor Service company shall maintain and carry the following insurance coverage:</li>
+    <li>Commercial General Liability: Minimum $1M.</li>
+    <li>Automobile Insurance: Minimum $1M.</li>
+    <li>Workers’ Compensation: Minimum $1M.</li>
+  </ul>
   {{/if}}
 
 </body>
