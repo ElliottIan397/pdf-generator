@@ -59,7 +59,6 @@ app.post("/generate-pdf", async (req, res) => {
 });
 
 const { getAccessToken } = require("./docusignClient");
-const fs = require("fs");
 const path = require("path");
 
 app.post("/send-envelope", async (req, res) => {
