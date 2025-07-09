@@ -58,6 +58,74 @@ app.post("/generate-pdf", async (req, res) => {
   }
 });
 
+const { getAccessToken } = require("./docusignClient");
+const fs = require("fs");
+const path = require("path");
+
+app.post("/send-envelope", async (req, res) => {
+  const contractData = req.body;
+
+  if (!contractData.Customer_Email) {
+    return res.status(400).json({ error: "Missing Customer_Email." });
+  }
+
+  try {
+    const accessToken = await getAccessToken();
+
+    // Simulate the PDF contract (you'll eventually generate this from html2pdf again)
+    const pdfBuffer = fs.readFileSync(path.join(__dirname, "latest-contract.pdf")); // TEMP placeholder
+
+    const envelopeDefinition = {
+      emailSubject: "Please sign your Subscription Agreement",
+      documents: [
+        {
+          documentBase64: pdfBuffer.toString("base64"),
+          name: "Subscription_Agreement.pdf",
+          fileExtension: "pdf",
+          documentId: "1",
+        },
+      ],
+      recipients: {
+        signers: [
+          {
+            email: contractData.Customer_Email,
+            name: contractData.Customer_Contact || "Customer",
+            recipientId: "1",
+            routingOrder: "1",
+            tabs: {
+              signHereTabs: [
+                {
+                  anchorString: "/sign_here/",
+                  anchorUnits: "pixels",
+                  anchorYOffset: "10",
+                  anchorXOffset: "20",
+                },
+              ],
+            },
+          },
+        ],
+      },
+      status: "sent",
+    };
+
+    const response = await axios.post(
+      `${process.env.DOCUSIGN_BASE_PATH}/restapi/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
+      envelopeDefinition,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.status(200).json({ envelopeId: response.data.envelopeId });
+  } catch (err) {
+    console.error("Envelope send error:", err.response?.data || err.message);
+    res.status(500).json({ error: "Failed to send envelope." });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`PDF service running on port ${PORT}`);
 });
