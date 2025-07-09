@@ -124,3 +124,6 @@ app.post("/send-envelope", async (req, res) => {
     res.status(500).send("Failed to send to DocuSign");
   }
 });
+app.listen(PORT, () => {
+  console.log(`PDF service running on port ${PORT}`);
+});
