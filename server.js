@@ -52,10 +52,14 @@ app.post("/generate-pdf", async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=contract.pdf");
     res.send(response.data);
-  } catch (err) {
-    console.error("PDF generation error:", err);
-    res.status(500).send("Failed to generate PDF.");
-  }
+} catch (err) {
+  console.error("DocuSign send error:", {
+    message: err.message,
+    response: err.response?.data,
+    stack: err.stack
+  });
+  res.status(500).send("Failed to send to DocuSign");
+}
 });
 
 const generateContract = require("./generate_contract_pdf");
