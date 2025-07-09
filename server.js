@@ -58,7 +58,7 @@ app.post("/generate-pdf", async (req, res) => {
   }
 });
 
-const { getAccessToken } = require("./docusignClient");
+const generateContract = require("./generate_contract_pdf");
 
 app.post("/send-envelope", async (req, res) => {
   const contractData = req.body;
@@ -70,8 +70,8 @@ app.post("/send-envelope", async (req, res) => {
   try {
     const accessToken = await getAccessToken();
 
-    // Simulate the PDF contract (you'll eventually generate this from html2pdf again)
-    const pdfBuffer = fs.readFileSync(path.join(__dirname, "latest-contract.pdf")); // TEMP placeholder
+    // Generate contract PDF
+    const pdfBuffer = await generateContract(contractData);
 
     const envelopeDefinition = {
       emailSubject: "Please sign your Subscription Agreement",
@@ -118,12 +118,9 @@ app.post("/send-envelope", async (req, res) => {
     );
 
     res.status(200).json({ envelopeId: response.data.envelopeId });
-  } catch (err) {
-    console.error("Envelope send error:", err.response?.data || err.message);
-    res.status(500).json({ error: "Failed to send envelope." });
-  }
-});
 
-app.listen(PORT, () => {
-  console.log(`PDF service running on port ${PORT}`);
+  } catch (err) {
+    console.error("DocuSign send error:", err.response?.data || err.message);
+    res.status(500).send("Failed to send to DocuSign");
+  }
 });
