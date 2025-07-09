@@ -12,6 +12,7 @@
     body {
       font-family: sans-serif;
       color: #1a1a1a;
+      counter-reset: page;
     }
 
     .page-break {
@@ -34,11 +35,25 @@
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       margin-top: 1.5em;
+    }
+
+    .page-number {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .page-number:after {
+      content: "Page " counter(page);
     }
   </style>
 </head>
+
 
 <body>
   <h1>Subscription Agreement</h1>
@@ -510,6 +525,8 @@
     <li>Workers’ Compensation: Minimum $1M.</li>
   </ul>
   {{/if}}
+
+<div class="page-number"></div>
 
 </body>
 
