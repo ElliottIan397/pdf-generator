@@ -25,7 +25,12 @@ async function getAccessToken() {
     scope: "signature impersonation",
   };
 
-  const token = jwt.sign(jwtPayload, privateKey, { algorithm: "RS256" });
+  const token = jwt.sign(jwtPayload, privateKey, {
+    algorithm: "RS256",
+    header: {
+      kid: process.env.DOCUSIGN_RSA_KEYPAIR_ID,
+    },
+  });
 
   try {
     const response = await axios.post(`${DOCUSIGN_BASE_PATH}/oauth/token`, null, {
