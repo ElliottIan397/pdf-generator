@@ -5,7 +5,7 @@ const path = require('path');
 const handlebars = require('handlebars');
 const axios = require('axios');
 
-async function generatePDF() {
+async function generateContract(contractData) {
   // Load HTML template
   const templatePath = path.join(__dirname, 'contract_template_minimal.html');
   const templateHtml = fs.readFileSync(templatePath, 'utf8');
@@ -60,4 +60,4 @@ async function generatePDF() {
   console.log('✅ PDF generated via html2pdf.app: Subscription_Contract.pdf');
 }
 
-generatePDF().catch(console.error);
+module.exports = { generateContract };
