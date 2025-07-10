@@ -127,7 +127,7 @@ app.post("/send-envelope", async (req, res) => {
       }
     );
 
-    console.log("✅ Envelope sent:", response.data.envelopeId);
+    console.log("✅ Full DocuSign response:", response.data);
     res.status(200).json({ envelopeId: response.data.envelopeId });
 
   } catch (err) {
