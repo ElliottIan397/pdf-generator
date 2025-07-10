@@ -1,19 +1,31 @@
 const express = require("express");
-const cors = require("cors");
+const app = express(); // ✅ app must be declared before it's used
+
+// ✅ Custom CORS middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
 const axios = require("axios");
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: "*",
-  methods: ["POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
+// did not work
+// app.use(cors({
+//  origin: "*",
+//  methods: ["POST", "OPTIONS"],
+//  allowedHeaders: ["Content-Type"]
+//}));
 
 app.use(bodyParser.json({ limit: "2mb" }));
 
