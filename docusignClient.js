@@ -8,7 +8,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
-const DOCUSIGN_BASE_PATH = process.env.DOCUSIGN_BASE_PATH || "https://account-d.docusign.com";
+const DOCUSIGN_BASE_PATH = process.env.DOCUSIGN_BASE_PATH || "https://account.docusign.com";
 const privateKey = process.env.DOCUSIGN_PRIVATE_KEY;
 
 console.log("PRIVATE KEY RAW START");
