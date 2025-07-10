@@ -20,7 +20,7 @@ async function getAccessToken() {
   const jwtPayload = {
     iss: process.env.DOCUSIGN_INTEGRATION_KEY,
     sub: process.env.DOCUSIGN_USER_ID,
-    aud: "account-d.docusign.com",
+    aud: new URL(DOCUSIGN_BASE_PATH).host,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + JWT_LIFESPAN,
     scope: "signature impersonation",
