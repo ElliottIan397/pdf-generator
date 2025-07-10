@@ -62,7 +62,7 @@ app.post("/generate-pdf", async (req, res) => {
 }
 });
 
-const generateContract = require("./generate_contract_pdf");
+const { generateContract } = require("./generate_contract_pdf");
 const { getAccessToken } = require("./docusignClient");
 
 app.post("/send-envelope", async (req, res) => {
