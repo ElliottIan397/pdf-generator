@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
 const DOCUSIGN_BASE_PATH = process.env.DOCUSIGN_BASE_PATH || "https://account-d.docusign.com";
-const privateKey = fs.readFileSync("private.key", "utf8");
+const privateKey = process.env.DOCUSIGN_PRIVATE_KEY;
 
 console.log("PRIVATE KEY RAW START");
 console.log("🔐 DOCUSIGN_PRIVATE_KEY preview:", privateKey.slice(0, 30));  // ✅ Add this line
