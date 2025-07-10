@@ -52,21 +52,21 @@ app.post("/generate-pdf", async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=contract.pdf");
     res.send(response.data);
-} catch (err) {
-  console.error("DocuSign send error:", {
-    message: err.message,
-    response: err.response?.data,
-    stack: err.stack
-  });
-  res.status(500).send("Failed to send to DocuSign");
-}
+  } catch (err) {
+    console.error("DocuSign send error:", {
+      message: err.message,
+      response: err.response?.data,
+      stack: err.stack
+    });
+    res.status(500).send("Failed to send to DocuSign");
+  }
 });
 
 const { generateContract } = require("./generate_contract_pdf");
 const { getAccessToken } = require("./docusignClient");
 
 app.post("/send-envelope", async (req, res) => {
-  const contractData = req.body;
+  const contractData = req.body.contractData || req.body;
 
   if (!contractData.Customer_Email) {
     return res.status(400).json({ error: "Missing Customer_Email." });
