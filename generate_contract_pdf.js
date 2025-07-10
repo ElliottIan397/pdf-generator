@@ -16,6 +16,10 @@ async function generateContract(contractData) {
   const template = handlebars.compile(templateHtml);
 
   // Format and sort device data
+  if (!Array.isArray(data.Devices_Table)) {
+  console.error("❌ Devices_Table is not an array:", data.Devices_Table);
+  throw new Error("Devices_Table missing or not an array");
+}
   data.Devices_Table = data.Devices_Table
     .sort((a, b) => b.Volume - a.Volume)
     .map(device => ({
