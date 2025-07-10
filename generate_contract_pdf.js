@@ -14,7 +14,7 @@ async function generateContract(contractData) {
   const template = handlebars.compile(templateHtml);
 
   // Load contract data
-  const data = require('./contract_data.json');
+  const data = contractData;  // ✅ use the input passed from server
 
   // Sort devices by annual volume and format volume number
   data.Devices_Table = data.Devices_Table
