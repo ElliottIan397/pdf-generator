@@ -114,6 +114,8 @@ app.post("/send-envelope", async (req, res) => {
       status: "sent",
     };
 
+    console.log("📤 Sending envelope to DocuSign...");
+
     const response = await axios.post(
       `${process.env.DOCUSIGN_BASE_PATH}/restapi/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
       envelopeDefinition,
@@ -129,7 +131,7 @@ app.post("/send-envelope", async (req, res) => {
     res.status(200).json({ envelopeId: response.data.envelopeId });
 
   } catch (err) {
-    console.error("DocuSign send error:", err.response?.data || err.message);
+    console.error("❌ DocuSign send error:", err.response?.data || err.message);
     res.status(500).send("Failed to send to DocuSign");
   }
 });
