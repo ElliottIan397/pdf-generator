@@ -18,6 +18,18 @@ app.use(cors({
   allowedHeaders: ["Content-Type"]
 }));
 
+app.get("/env-check", (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    DOCUSIGN_AUTH_SERVER: process.env.DOCUSIGN_AUTH_SERVER,
+    DOCUSIGN_BASE_PATH: process.env.DOCUSIGN_BASE_PATH,
+    DOCUSIGN_API_BASE_PATH: process.env.DOCUSIGN_API_BASE_PATH,
+    DOCUSIGN_INTEGRATION_KEY: process.env.DOCUSIGN_INTEGRATION_KEY?.slice(0, 8) + '...',
+    DOCUSIGN_USER_ID: process.env.DOCUSIGN_USER_ID?.slice(0, 8) + '...',
+    DOCUSIGN_ACCOUNT_ID: process.env.DOCUSIGN_ACCOUNT_ID?.slice(0, 8) + '...',
+  });
+});
+
 app.options("*", cors());
 
 // ✅ JSON parser
