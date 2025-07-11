@@ -90,6 +90,57 @@ app.post("/send-envelope", async (req, res) => {
   }
 
   try {
+    // ✅ HubSpot Integration: Search or Create Contact
+    const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
+    const email = contractData.Customer_Email;
+
+    const searchResponse = await axios.post(
+      "https://api.hubapi.com/crm/v3/objects/contacts/search",
+      {
+        filterGroups: [{
+          filters: [{
+            propertyName: "email",
+            operator: "EQ",
+            value: email
+          }]
+        }],
+        properties: ["email"]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const existingContact = searchResponse.data.results[0];
+
+    if (existingContact) {
+      console.log(`✅ HubSpot: Contact already exists with ID ${existingContact.id}`);
+    } else {
+      const createResponse = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/contacts",
+        {
+          properties: {
+            email,
+            firstname: contractData.Customer_Contact || "Customer"
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      console.log("✅ HubSpot: New contact created with ID", createResponse.data.id);
+    }
+  } catch (err) {
+    console.warn("⚠️ HubSpot error (non-blocking):", err.response?.data || err.message);
+  }
+
+  try {
     const accessToken = await getAccessToken();
     const pdfBuffer = await generateContract(contractData);
 
@@ -106,10 +157,26 @@ app.post("/send-envelope", async (req, res) => {
       recipients: {
         signers: [
           {
+            email: contractData.Dealer_Email || "dealer@example.com",
+            name: contractData.Dealer_Name || "Dealer Signatory",
+            recipientId: "1",
+            routingOrder: "1", // ✅ Dealer signs first
+            tabs: {
+              signHereTabs: [
+                {
+                  anchorString: "/sign_here_dealer/",
+                  anchorUnits: "pixels",
+                  anchorYOffset: "10",
+                  anchorXOffset: "20",
+                },
+              ],
+            },
+          },
+          {
             email: contractData.Customer_Email,
             name: contractData.Customer_Contact || "Customer",
-            recipientId: "1",
-            routingOrder: "1",
+            recipientId: "2",
+            routingOrder: "2", // ✅ Customer signs second
             tabs: {
               signHereTabs: [
                 {
@@ -121,22 +188,6 @@ app.post("/send-envelope", async (req, res) => {
               ],
             },
           },
-          {
-            email: contractData.Dealer_Email || "dealer@example.com",
-            name: contractData.Dealer_Name || "Dealer Signatory",
-            recipientId: "2",
-            routingOrder: "2",
-            tabs: {
-              signHereTabs: [
-                {
-                  anchorString: "/sign_here_dealer/",
-                  anchorUnits: "pixels",
-                  anchorYOffset: "10",
-                  anchorXOffset: "20",
-                },
-              ],
-            },
-          }
         ],
       },
       status: "sent",
