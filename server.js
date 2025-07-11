@@ -141,7 +141,15 @@ app.post("/send-envelope", async (req, res) => {
     }
 
     // 📝 Add note to HubSpot contact
-    const noteText = `Subscription Agreement sent to ${contractData.Customer_Contact || "Customer"} at ${email}`;
+    const noteText = `
+Subscription Agreement sent to ${contractData.Customer_Contact || "Customer"} at ${email}.
+
+Guardrails Summary:
+- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
+- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
+- Device Lower Limit: ${contractData.deviceLowerLimit}
+- Device Upper Limit: ${contractData.deviceUpperLimit}
+`;
     await axios.post(
       "https://api.hubapi.com/engagements/v1/engagements",
       {
