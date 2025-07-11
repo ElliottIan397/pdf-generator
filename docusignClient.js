@@ -47,6 +47,7 @@ const response = await axios.post(`${DOCUSIGN_AUTH_SERVER}/oauth/token`, qs.stri
     });
 
     return response.data.access_token;
+    console.log("✅ Access token:", accessToken.slice(0, 20), "...");
   } catch (error) {
     console.error("DocuSign JWT Auth failed:");
     if (error.response) {
