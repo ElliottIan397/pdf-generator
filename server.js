@@ -113,7 +113,7 @@ app.post("/send-envelope", async (req, res) => {
             tabs: {
               signHereTabs: [
                 {
-                  anchorString: "/sign_here/",
+                  anchorString: "/sign_here_customer/",
                   anchorUnits: "pixels",
                   anchorYOffset: "10",
                   anchorXOffset: "20",
@@ -121,6 +121,22 @@ app.post("/send-envelope", async (req, res) => {
               ],
             },
           },
+          {
+            email: contractData.Dealer_Email || "dealer@example.com",
+            name: contractData.Dealer_Name || "Dealer Signatory",
+            recipientId: "2",
+            routingOrder: "2",
+            tabs: {
+              signHereTabs: [
+                {
+                  anchorString: "/sign_here_dealer/",
+                  anchorUnits: "pixels",
+                  anchorYOffset: "10",
+                  anchorXOffset: "20",
+                },
+              ],
+            },
+          }
         ],
       },
       status: "sent",
