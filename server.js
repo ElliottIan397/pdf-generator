@@ -299,7 +299,7 @@ app.post("/docusign-webhook", async (req, res) => {
       });
       formData.append("properties", JSON.stringify({ name: "Signed Subscription Agreement" }));
 
-      await axios.post(
+      const uploadResponse = await axios.post(
         `https://api.hubapi.com/files/v3/files/upload`,
         formData,
         {
@@ -310,7 +310,22 @@ app.post("/docusign-webhook", async (req, res) => {
         }
       );
 
-      console.log("📎 Signed PDF pushed to HubSpot contact ID", contactId);
+      const fileId = uploadResponse.data.id;
+
+      // 🔗 Associate file with contact
+      await axios.put(
+        `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}/associations/files/${fileId}/contact_to_file`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      console.log("📎 Signed PDF associated with HubSpot contact", contactId);
+
     }
 
     res.status(200).send("Webhook received");
