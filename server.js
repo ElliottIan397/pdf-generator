@@ -247,6 +247,79 @@ Guardrails Summary:
   }
 });
 
+// ✅ Webhook to receive DocuSign completion notification
+app.post("/docusign-webhook", async (req, res) => {
+  try {
+    const envelopeId = req.body.envelopeId || req.body?.envelopeStatus?.envelopeId;
+    const status = req.body?.envelopeStatus?.status;
+
+    if (status === "completed") {
+      console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
+
+      const email = req.body?.envelopeStatus?.customFields?.textCustomFields?.find(f => f.name === "hubspotEmail")?.value;
+      if (!email) throw new Error("No hubspotEmail found in custom fields");
+
+      const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
+
+      // Lookup contactId using email
+      const contactSearch = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/contacts/search",
+        {
+          filterGroups: [{ filters: [{ propertyName: "email", operator: "EQ", value: email }] }],
+          properties: ["email"]
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      const contactId = contactSearch.data.results[0]?.id;
+      if (!contactId) throw new Error(`No HubSpot contact found for ${email}`);
+
+      const accessToken = await getAccessToken();
+      const documentResponse = await axios.get(
+        `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes/${envelopeId}/documents/combined`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          responseType: "arraybuffer"
+        }
+      );
+
+      const pdfBuffer = documentResponse.data;
+
+      const formData = new FormData();
+      formData.append("file", pdfBuffer, {
+        filename: "Signed_Agreement.pdf",
+        contentType: "application/pdf"
+      });
+      formData.append("properties", JSON.stringify({ name: "Signed Subscription Agreement" }));
+
+      await axios.post(
+        `https://api.hubapi.com/files/v3/files/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            ...formData.getHeaders()
+          }
+        }
+      );
+
+      console.log("📎 Signed PDF pushed to HubSpot contact ID", contactId);
+    }
+
+    res.status(200).send("Webhook received");
+  } catch (err) {
+    console.error("❌ Webhook processing failed:", err);
+    res.status(500).send("Webhook error");
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 PDF service running on port ${PORT}`);
 });
