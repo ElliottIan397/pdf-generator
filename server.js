@@ -93,6 +93,7 @@ app.post("/send-envelope", async (req, res) => {
     // ✅ HubSpot Integration: Search or Create Contact
     const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
     const email = contractData.Customer_Email;
+    let contactId;
 
     const searchResponse = await axios.post(
       "https://api.hubapi.com/crm/v3/objects/contacts/search",
@@ -117,7 +118,8 @@ app.post("/send-envelope", async (req, res) => {
     const existingContact = searchResponse.data.results[0];
 
     if (existingContact) {
-      console.log(`✅ HubSpot: Contact already exists with ID ${existingContact.id}`);
+      contactId = existingContact.id;
+      console.log(`✅ HubSpot: Contact already exists with ID ${contactId}`);
     } else {
       const createResponse = await axios.post(
         "https://api.hubapi.com/crm/v3/objects/contacts",
@@ -134,8 +136,28 @@ app.post("/send-envelope", async (req, res) => {
           }
         }
       );
-      console.log("✅ HubSpot: New contact created with ID", createResponse.data.id);
+      contactId = createResponse.data.id;
+      console.log("✅ HubSpot: New contact created with ID", contactId);
     }
+
+    // 📝 Add note to HubSpot contact
+    const noteText = `Subscription Agreement sent to ${contractData.Customer_Contact || "Customer"} at ${email}`;
+    await axios.post(
+      "https://api.hubapi.com/engagements/v1/engagements",
+      {
+        engagement: { active: true, type: "NOTE" },
+        associations: { contactIds: [contactId] },
+        metadata: { body: noteText }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    console.log(`📝 HubSpot: Note added to contact ID ${contactId}`);
+
   } catch (err) {
     console.warn("⚠️ HubSpot error (non-blocking):", err.response?.data || err.message);
   }
@@ -157,7 +179,7 @@ app.post("/send-envelope", async (req, res) => {
       recipients: {
         signers: [
           {
-            email: contractData.Dealer_Email || "dealer@example.com",
+            email: contractData.Dealer_Email || "IanElliott@MidTennOP.com",
             name: contractData.Dealer_Name || "Dealer Signatory",
             recipientId: "1",
             routingOrder: "1", // ✅ Dealer signs first
