@@ -128,10 +128,10 @@ app.post("/send-envelope", async (req, res) => {
 
     console.log("📤 Sending envelope to DocuSign...");
 
-    console.log("📡 Posting to:", `${process.env.DOCUSIGN_BASE_PATH}/restapi/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`);
+    console.log("📡 Posting to:", `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`);
 
     const response = await axios.post(
-      `${process.env.DOCUSIGN_BASE_PATH}/restapi/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
+      `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
       envelopeDefinition,
       {
         headers: {
