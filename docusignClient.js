@@ -8,7 +8,8 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
-const DOCUSIGN_BASE_PATH = process.env.DOCUSIGN_BASE_PATH || "https://account.docusign.com";
+const DOCUSIGN_API_BASE_PATH = process.env.DOCUSIGN_API_BASE_PATH || "https://demo.docusign.net/restapi";
+const DOCUSIGN_AUTH_SERVER = process.env.DOCUSIGN_AUTH_SERVER || "https://account-d.docusign.com";
 const privateKey = process.env.DOCUSIGN_PRIVATE_KEY;
 
 console.log("PRIVATE KEY RAW START");
@@ -20,7 +21,7 @@ async function getAccessToken() {
   const jwtPayload = {
     iss: process.env.DOCUSIGN_INTEGRATION_KEY,
     sub: process.env.DOCUSIGN_USER_ID,
-    aud: new URL(DOCUSIGN_BASE_PATH).host,
+    aud: new URL(DOCUSIGN_AUTH_SERVER).host,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + JWT_LIFESPAN,
     scope: "signature impersonation",
@@ -36,7 +37,7 @@ async function getAccessToken() {
   try {
     const qs = require("querystring");
 
-    const response = await axios.post(`${DOCUSIGN_BASE_PATH}/oauth/token`, qs.stringify({
+const response = await axios.post(`${DOCUSIGN_AUTH_SERVER}/oauth/token`, qs.stringify({
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion: token,
     }), {
