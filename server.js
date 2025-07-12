@@ -327,6 +327,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       // 📤 Upload signed PDF to HubSpot
       const formData = new FormData();
+
       formData.append("file", pdfBuffer, {
         filename: "Signed_Agreement.pdf",
         contentType: "application/pdf"
@@ -338,24 +339,20 @@ app.post("/docusign-webhook", async (req, res) => {
         folderId: "192547885421"
       }));
 
-      formData.append(
-        "properties",
-        JSON.stringify({ name: "Signed Subscription Agreement" })
-      );
+      formData.append("properties", JSON.stringify({
+        name: "Signed Subscription Agreement"
+      }));
 
-      // 🔍 Output exactly what we’re sending to HubSpot
-      console.log("📤 FormData headers:", formData.getHeaders());
-      console.log("📤 FormData body:\n", formData.getBuffer().toString());
+      // ✅ DO NOT touch the formData after calling getHeaders
+      const headers = {
+        ...formData.getHeaders(),
+        Authorization: `Bearer ${hubspotApiToken}`
+      };
 
       const uploadResponse = await axios.post(
         "https://api.hubapi.com/files/v3/files",
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${hubspotApiToken}`,
-            ...formData.getHeaders()
-          }
-        }
+        { headers }
       );
 
       const fileId = uploadResponse.data.id;
