@@ -6,3 +6,4 @@ private.key
 *.txt
 jwt.txt
 test-docusign-auth.js
+upload-test.js

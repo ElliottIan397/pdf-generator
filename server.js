@@ -85,6 +85,7 @@ app.post("/send-envelope", async (req, res) => {
   console.log("📥 /send-envelope endpoint hit");
 
   const contractData = req.body.contractData || req.body;
+  console.log("🧬 Scenario_URL received:", contractData.Scenario_URL);
 
   if (!contractData.Customer_Email) {
     return res.status(400).json({ error: "Missing Customer_Email." });
