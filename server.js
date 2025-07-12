@@ -7,6 +7,7 @@ const handlebars = require("handlebars");
 const axios = require("axios");
 const { generateContract } = require("./generate_contract_pdf");
 const { getAccessToken } = require("./docusignClient");
+const FormData = require("form-data");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -300,7 +301,7 @@ app.post("/docusign-webhook", async (req, res) => {
       formData.append("properties", JSON.stringify({ name: "Signed Subscription Agreement" }));
 
       const uploadResponse = await axios.post(
-        `https://api.hubapi.com/files/v3/files/upload`,
+        `https://api.hubapi.com/files/v3/files/`,
         formData,
         {
           headers: {
