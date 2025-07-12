@@ -273,10 +273,10 @@ app.post("/docusign-webhook", async (req, res) => {
     if (status === "completed") {
       console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
 
-      // 🔐 Get access token for DocuSign API
+      // 🔐 Get DocuSign access token
       const accessToken = await getAccessToken();
 
-      // 📥 Fetch custom fields to get hubspotEmail
+      // 📥 Fetch envelope custom fields to get hubspotEmail
       const customFieldResponse = await axios.get(
         `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes/${envelopeId}/custom_fields`,
         {
@@ -294,7 +294,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
 
-      // 🔍 Find contact in HubSpot by email
+      // 🔍 Search HubSpot contact by email
       const contactSearch = await axios.post(
         "https://api.hubapi.com/crm/v3/objects/contacts/search",
         {
@@ -325,7 +325,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const pdfBuffer = documentResponse.data;
 
-      // 📤 Upload to HubSpot
+      // 📤 Upload signed PDF to HubSpot
       const formData = new FormData();
       formData.append("file", pdfBuffer, {
         filename: "Signed_Agreement.pdf",
@@ -346,6 +346,9 @@ app.post("/docusign-webhook", async (req, res) => {
         JSON.stringify({ name: "Signed Subscription Agreement" })
       );
 
+      // 🔍 Optional: debug output of payload
+      // console.log("📤 HubSpot upload payload:", formData.getBuffer().toString());
+
       const uploadResponse = await axios.post(
         "https://api.hubapi.com/files/v3/files",
         formData,
@@ -359,7 +362,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const fileId = uploadResponse.data.id;
 
-      // 🔗 Associate file with contact
+      // 🔗 Associate file with HubSpot contact
       await axios.put(
         `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}/associations/files/${fileId}/contact_to_file`,
         {},
