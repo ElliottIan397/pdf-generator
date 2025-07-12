@@ -335,7 +335,7 @@ app.post("/docusign-webhook", async (req, res) => {
       formData.append("options", JSON.stringify({
         access: "PRIVATE",
         overwrite: false,
-        folderPath: "Signed Agreements"
+        folderId: "192547885421"  // ✅ Use ID instead of folderPath
       }), {
         contentType: "application/json"
       });
