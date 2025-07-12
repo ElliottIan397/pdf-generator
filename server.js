@@ -335,10 +335,8 @@ app.post("/docusign-webhook", async (req, res) => {
       formData.append("options", JSON.stringify({
         access: "PRIVATE",
         overwrite: false,
-        folderId: "192547885421"  // ✅ Use ID instead of folderPath
-      }), {
-        contentType: "application/json"
-      });
+        folderId: "192547885421"
+      }));
 
       formData.append(
         "properties",
