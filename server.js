@@ -346,8 +346,9 @@ app.post("/docusign-webhook", async (req, res) => {
         JSON.stringify({ name: "Signed Subscription Agreement" })
       );
 
-      // 🔍 Optional: debug output of payload
-      // console.log("📤 HubSpot upload payload:", formData.getBuffer().toString());
+      // 🔍 Output exactly what we’re sending to HubSpot
+      console.log("📤 FormData headers:", formData.getHeaders());
+      console.log("📤 FormData body:\n", formData.getBuffer().toString());
 
       const uploadResponse = await axios.post(
         "https://api.hubapi.com/files/v3/files",
