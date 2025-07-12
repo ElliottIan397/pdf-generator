@@ -232,7 +232,7 @@ Guardrails Summary:
           }
         ]
       },
-      
+
       status: "sent",
     };
 
@@ -260,11 +260,16 @@ Guardrails Summary:
   }
 });
 
-// ✅ Webhook to receive DocuSign completion notification
 app.post("/docusign-webhook", async (req, res) => {
+  // ✅ Log full webhook payload for inspection
+  console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
+
   try {
     const envelopeId = req.body.envelopeId || req.body?.envelopeStatus?.envelopeId;
     const status = req.body?.envelopeStatus?.status;
+
+    console.log("📦 Envelope ID:", envelopeId);
+    console.log("📌 Envelope Status:", status);
 
     if (status === "completed") {
       console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
@@ -274,7 +279,6 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
 
-      // Lookup contactId using email
       const contactSearch = await axios.post(
         "https://api.hubapi.com/crm/v3/objects/contacts/search",
         {
@@ -325,7 +329,6 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const fileId = uploadResponse.data.id;
 
-      // 🔗 Associate file with contact
       await axios.put(
         `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}/associations/files/${fileId}/contact_to_file`,
         {},
@@ -338,12 +341,11 @@ app.post("/docusign-webhook", async (req, res) => {
       );
 
       console.log("📎 Signed PDF associated with HubSpot contact", contactId);
-
     }
 
     res.status(200).send("Webhook received");
   } catch (err) {
-    console.error("❌ Webhook processing failed:", err);
+    console.error("❌ Webhook processing failed:", err.response?.data || err.message || err);
     res.status(500).send("Webhook error");
   }
 });
