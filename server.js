@@ -332,14 +332,13 @@ app.post("/docusign-webhook", async (req, res) => {
         contentType: "application/pdf"
       });
 
-      formData.append(
-        "options",
-        JSON.stringify({
-          access: "PRIVATE",
-          overwrite: false,
-          folderPath: "Signed Agreements"
-        })
-      );
+      formData.append("options", JSON.stringify({
+        access: "PRIVATE",
+        overwrite: false,
+        folderPath: "Signed Agreements"
+      }), {
+        contentType: "application/json"
+      });
 
       formData.append(
         "properties",
