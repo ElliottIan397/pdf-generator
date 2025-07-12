@@ -261,12 +261,12 @@ Guardrails Summary:
 });
 
 app.post("/docusign-webhook", async (req, res) => {
-  // ✅ Log full webhook payload for inspection
+  // Log the full webhook payload for debugging
   console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
 
   try {
-    const envelopeId = req.body.envelopeId || req.body?.envelopeStatus?.envelopeId;
-    const status = req.body?.envelopeStatus?.status;
+    const envelopeId = req.body?.data?.envelopeSummary?.envelopeId || req.body?.data?.envelopeId;
+    const status = req.body?.data?.envelopeSummary?.status;
 
     console.log("📦 Envelope ID:", envelopeId);
     console.log("📌 Envelope Status:", status);
@@ -274,11 +274,16 @@ app.post("/docusign-webhook", async (req, res) => {
     if (status === "completed") {
       console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
 
-      const email = req.body?.envelopeStatus?.customFields?.textCustomFields?.find(f => f.name === "hubspotEmail")?.value;
+      // Attempt to read the custom field from the webhook (if included)
+      const email = req.body?.data?.envelopeSummary?.customFields?.textCustomFields?.find(
+        f => f.name === "hubspotEmail"
+      )?.value;
+
       if (!email) throw new Error("No hubspotEmail found in custom fields");
 
       const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
 
+      // Search for contact in HubSpot by email
       const contactSearch = await axios.post(
         "https://api.hubapi.com/crm/v3/objects/contacts/search",
         {
@@ -296,6 +301,7 @@ app.post("/docusign-webhook", async (req, res) => {
       const contactId = contactSearch.data.results[0]?.id;
       if (!contactId) throw new Error(`No HubSpot contact found for ${email}`);
 
+      // Get the signed PDF from DocuSign
       const accessToken = await getAccessToken();
       const documentResponse = await axios.get(
         `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes/${envelopeId}/documents/combined`,
@@ -309,6 +315,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const pdfBuffer = documentResponse.data;
 
+      // Upload the PDF to HubSpot
       const formData = new FormData();
       formData.append("file", pdfBuffer, {
         filename: "Signed_Agreement.pdf",
@@ -317,7 +324,7 @@ app.post("/docusign-webhook", async (req, res) => {
       formData.append("properties", JSON.stringify({ name: "Signed Subscription Agreement" }));
 
       const uploadResponse = await axios.post(
-        `https://api.hubapi.com/files/v3/files/`,
+        `https://api.hubapi.com/files/v3/files`,
         formData,
         {
           headers: {
@@ -329,6 +336,7 @@ app.post("/docusign-webhook", async (req, res) => {
 
       const fileId = uploadResponse.data.id;
 
+      // Associate the file with the contact
       await axios.put(
         `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}/associations/files/${fileId}/contact_to_file`,
         {},
