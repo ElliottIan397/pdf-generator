@@ -221,6 +221,18 @@ Guardrails Summary:
           },
         ],
       },
+      // ✅ Inject hubspotEmail as a custom field
+      customFields: {
+        textCustomFields: [
+          {
+            name: "hubspotEmail",
+            value: contractData.Customer_Email,
+            required: false,
+            show: false
+          }
+        ]
+      },
+      
       status: "sent",
     };
 
