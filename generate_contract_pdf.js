@@ -60,7 +60,7 @@ async function generateContract(contractData) {
     { responseType: "arraybuffer" }
   );
 
-  console.log("✅ PDF generated via html2pdf.app");
+  //console.log("✅ PDF generated via html2pdf.app");
   return Buffer.from(response.data); // Return the PDF buffer
 }
 

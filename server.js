@@ -38,7 +38,7 @@ app.use(bodyParser.json({ limit: "2mb" }));
 
 // ✅ Logging helper
 app.use((req, res, next) => {
-  console.log(`📡 ${req.method} ${req.url}`);
+  //console.log(`📡 ${req.method} ${req.url}`);
   next();
 });
 
@@ -82,7 +82,7 @@ app.post("/generate-pdf", async (req, res) => {
 
 // ✅ DocuSign Envelope Endpoint
 app.post("/send-envelope", async (req, res) => {
-  console.log("📥 /send-envelope endpoint hit");
+  //console.log("📥 /send-envelope endpoint hit");
 
   const contractData = req.body.contractData || req.body;
   console.log("🧬 Scenario_URL received:", contractData.Scenario_URL);
@@ -121,7 +121,7 @@ app.post("/send-envelope", async (req, res) => {
 
     if (existingContact) {
       contactId = existingContact.id;
-      console.log(`✅ HubSpot: Contact already exists with ID ${contactId}`);
+      //console.log(`✅ HubSpot: Contact already exists with ID ${contactId}`);
     } else {
       const createResponse = await axios.post(
         "https://api.hubapi.com/crm/v3/objects/contacts",
@@ -139,7 +139,7 @@ app.post("/send-envelope", async (req, res) => {
         }
       );
       contactId = createResponse.data.id;
-      console.log("✅ HubSpot: New contact created with ID", contactId);
+      //console.log("✅ HubSpot: New contact created with ID", contactId);
     }
 
     // 📝 Add note to HubSpot contact
@@ -166,7 +166,7 @@ Guardrails Summary:
         }
       }
     );
-    console.log(`📝 HubSpot: Note added to contact ID ${contactId}`);
+    //console.log(`📝 HubSpot: Note added to contact ID ${contactId}`);
 
   } catch (err) {
     console.warn("⚠️ HubSpot error (non-blocking):", err.response?.data || err.message);
@@ -237,9 +237,9 @@ Guardrails Summary:
       status: "sent",
     };
 
-    console.log("📤 Sending envelope to DocuSign...");
+    //console.log("📤 Sending envelope to DocuSign...");
 
-    console.log("📡 Posting to:", `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`);
+    //console.log("📡 Posting to:", `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`);
 
     const response = await axios.post(
       `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
@@ -252,7 +252,7 @@ Guardrails Summary:
       }
     );
 
-    console.log("✅ Full DocuSign response:", response.data);
+    //console.log("✅ Full DocuSign response:", response.data);
     res.status(200).json({ envelopeId: response.data.envelopeId });
 
   } catch (err) {
@@ -262,17 +262,17 @@ Guardrails Summary:
 });
 
 app.post("/docusign-webhook", async (req, res) => {
-  console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
+  //console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
 
   try {
     const envelopeId = req.body?.data?.envelopeSummary?.envelopeId || req.body?.data?.envelopeId;
     const status = req.body?.data?.envelopeSummary?.status;
 
-    console.log("📦 Envelope ID:", envelopeId);
-    console.log("📌 Envelope Status:", status);
+    //console.log("📦 Envelope ID:", envelopeId);
+    //console.log("📌 Envelope Status:", status);
 
     if (status === "completed") {
-      console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
+      //console.log("✅ DocuSign webhook: Envelope completed:", envelopeId);
 
       // 🔐 Get DocuSign access token
       const accessToken = await getAccessToken();
@@ -370,7 +370,7 @@ app.post("/docusign-webhook", async (req, res) => {
         }
       );
 
-      console.log("📎 Signed PDF associated with HubSpot contact", contactId);
+      //console.log("📎 Signed PDF associated with HubSpot contact", contactId);
     }
 
     res.status(200).send("Webhook received");
@@ -381,5 +381,5 @@ app.post("/docusign-webhook", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 PDF service running on port ${PORT}`);
+  //console.log(`🚀 PDF service running on port ${PORT}`);
 });

@@ -12,8 +12,8 @@ const DOCUSIGN_API_BASE_PATH = process.env.DOCUSIGN_API_BASE_PATH || "https://de
 const DOCUSIGN_AUTH_SERVER = process.env.DOCUSIGN_AUTH_SERVER || "https://account-d.docusign.com";
 const privateKey = process.env.DOCUSIGN_PRIVATE_KEY;
 
-console.log("PRIVATE KEY RAW START");
-console.log("🔐 DOCUSIGN_PRIVATE_KEY preview:", privateKey.slice(0, 30));  // ✅ Add this line
+//console.log("PRIVATE KEY RAW START");
+//console.log("🔐 DOCUSIGN_PRIVATE_KEY preview:", privateKey.slice(0, 30));  // ✅ Add this line
 
 const JWT_LIFESPAN = 3600; // seconds
 
