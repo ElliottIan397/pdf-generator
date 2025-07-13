@@ -84,7 +84,7 @@ app.post("/generate-pdf", async (req, res) => {
 app.post("/send-envelope", async (req, res) => {
   //console.log("📥 /send-envelope endpoint hit");
 
-  const contractData = req.body.contractData || req.body;
+  const contractData = req.body;
   console.log("🧬 Scenario_URL received:", contractData.Scenario_URL);
 
   if (!contractData.Customer_Email) {
