@@ -261,6 +261,7 @@ Guardrails Summary:
   }
 });
 
+/*
 app.post("/docusign-webhook", async (req, res) => {
   //console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
 
@@ -379,7 +380,7 @@ app.post("/docusign-webhook", async (req, res) => {
     res.status(500).send("Webhook error");
   }
 });
-
+*/
 app.listen(PORT, () => {
   //console.log(`🚀 PDF service running on port ${PORT}`);
 });
