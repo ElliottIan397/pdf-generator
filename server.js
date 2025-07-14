@@ -256,6 +256,8 @@ Guardrails Summary:
 
     //console.log("📡 Posting to:", `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`);
 
+    console.log("📎 Dealer hyperlinkTabs:", envelopeDefinition.recipients.signers[0].tabs.hyperlinkTabs);
+
     const response = await axios.post(
       `${process.env.DOCUSIGN_BASE_PATH}/v2.1/accounts/${process.env.DOCUSIGN_ACCOUNT_ID}/envelopes`,
       envelopeDefinition,
