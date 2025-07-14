@@ -152,14 +152,14 @@ Guardrails Summary:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}
 `;
-    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days out
+    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days from now
 
     await axios.post(
       "https://api.hubapi.com/crm/v3/objects/tasks",
       {
         properties: {
-          subject: "QBR – Review Customer Subscription",
-          notes: `
+          hs_task_subject: "QBR – Review Customer Subscription",
+          hs_task_body: `
 Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
 
 Guardrails:
@@ -172,7 +172,7 @@ Scenario: ${contractData.Scenario_URL}
 `,
           hs_task_priority: "HIGH",
           hs_timestamp: taskDueDate,
-          hubspot_owner_id: existingContact.properties?.hubspot_owner_id || undefined
+          hubspot_owner_id: existingContact?.properties?.hubspot_owner_id
         },
         associations: [
           {
