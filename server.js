@@ -205,20 +205,20 @@ Guardrails Summary:
               hyperlinkTabs: [
                 {
                   tabLabel: "ScenarioLink",
-                  anchorString: "/#HREF_ScenarioLink/",
+                  anchorString: "SCENARIO_LINK_ANCHOR",  // must exactly match PDF text
                   anchorUnits: "pixels",
-                  anchorXOffset: "0",
                   anchorYOffset: "0",
+                  anchorXOffset: "0",
                   font: "helvetica",
                   fontSize: "Size12",
                   fontColor: "BrightRed",
                   bold: true,
                   value: "Click here to view scenario",
                   url: contractData.Scenario_URL,
-                  documentId: "1",         // REQUIRED
-                  pageNumber: "6",         // REQUIRED if anchor fails
-                  recipientId: "1",        // REQUIRED
-                  required: false          // Optional, but avoids edge behavior
+                  documentId: "1",
+                  pageNumber: "6",     // required fallback
+                  recipientId: "1",    // only Signer 1 sees it
+                  required: false
                 }
               ]
             }
