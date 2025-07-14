@@ -202,19 +202,19 @@ Guardrails Summary:
                   anchorXOffset: "20",
                 },
               ],
-              textTabs: [
+              hyperlinkTabs: [
                 {
-                  tabLabel: "#HREF_ScenarioLink",
-                  name: contractData.Scenario_URL,       // 💡 Display text
-                  tooltip: contractData.Scenario_URL,    // 💡 Actual link
+                  tabLabel: "ScenarioLink",
                   anchorString: "/#HREF_ScenarioLink/",
                   anchorUnits: "pixels",
                   anchorXOffset: "0",
                   anchorYOffset: "0",
                   font: "helvetica",
                   fontSize: "Size12",
-                  fontColor: "#0000FF",
-                  locked: true
+                  fontColor: "BrightRed",
+                  bold: true,
+                  value: "Click here to view scenario",
+                  url: contractData.Scenario_URL
                 }
               ]
             }
