@@ -14,6 +14,7 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
+const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
 
 // ✅ CORS setup
 app.use(cors({
@@ -210,7 +211,7 @@ app.post("/send-envelope", async (req, res) => {
 
 app.post("/send-to-hubspot", async (req, res) => {
   const contractData = req.body;
-  const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
+
   const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
 
   try {
