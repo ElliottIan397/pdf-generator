@@ -214,7 +214,11 @@ Guardrails Summary:
                   fontColor: "BrightRed",
                   bold: true,
                   value: "Click here to view scenario",
-                  url: contractData.Scenario_URL
+                  url: contractData.Scenario_URL,
+                  documentId: "1",         // REQUIRED
+                  pageNumber: "6",         // REQUIRED if anchor fails
+                  recipientId: "1",        // REQUIRED
+                  required: false          // Optional, but avoids edge behavior
                 }
               ]
             }
