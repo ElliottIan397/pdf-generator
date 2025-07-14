@@ -8,8 +8,11 @@ const axios = require("axios");
 const { generateContract } = require("./generate_contract_pdf");
 const { getAccessToken } = require("./docusignClient");
 const FormData = require("form-data");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 // ✅ CORS setup
@@ -91,44 +94,78 @@ app.post("/send-envelope", async (req, res) => {
     return res.status(400).json({ error: "Missing Customer_Email." });
   }
 
-  try {
-    // ✅ HubSpot Integration: Search or Create Contact
-    const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
-    const email = contractData.Customer_Email;
-    let contactId;
+  const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
 
-    const searchResponse = await axios.post(
-      "https://api.hubapi.com/crm/v3/objects/contacts/search",
-      {
-        filterGroups: [{
-          filters: [{
-            propertyName: "email",
-            operator: "EQ",
-            value: email
-          }]
-        }],
-        properties: ["email"]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${hubspotApiToken}`,
-          "Content-Type": "application/json"
+  app.post("/send-to-hubspot", async (req, res) => {
+    const contractData = req.body;
+    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+
+    try {
+      // Step 1: Search for existing contact
+      const searchRes = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/contacts/search",
+        {
+          filterGroups: [
+            {
+              filters: [
+                {
+                  propertyName: "email",
+                  operator: "EQ",
+                  value: contractData.Customer_Email
+                }
+              ]
+            }
+          ]
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
         }
+      );
+
+      let contactId = null;
+      if (searchRes.data.results.length > 0) {
+        contactId = searchRes.data.results[0].id;
+      } else {
+        // Create new contact if not found
+        const createContact = await axios.post(
+          "https://api.hubapi.com/crm/v3/objects/contacts",
+          {
+            properties: {
+              email: contractData.Customer_Email,
+              firstname: contractData.Customer_Name
+            }
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${hubspotApiToken}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        contactId = createContact.data.id;
       }
-    );
 
-    const existingContact = searchResponse.data.results[0];
-
-    if (existingContact) {
-      contactId = existingContact.id;
-      //console.log(`✅ HubSpot: Contact already exists with ID ${contactId}`);
-    } else {
-      const createResponse = await axios.post(
-        "https://api.hubapi.com/crm/v3/objects/contacts",
+      // Step 2: Create the task
+      const taskResponse = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/tasks",
         {
           properties: {
-            email,
-            firstname: contractData.Customer_Contact || "Customer"
+            hs_task_subject: "QBR – Review Customer Subscription",
+            hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+
+Guardrails:
+- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
+- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
+- Device Lower Limit: ${contractData.deviceLowerLimit}
+- Device Upper Limit: ${contractData.deviceUpperLimit}
+
+Scenario: ${contractData.Scenario_URL}`,
+            hs_task_priority: "HIGH",
+            hs_timestamp: taskDueDate,
+            hubspot_owner_id: contractData.hubspot_owner_id || undefined
           }
         },
         {
@@ -138,59 +175,44 @@ app.post("/send-envelope", async (req, res) => {
           }
         }
       );
-      contactId = createResponse.data.id;
-      //console.log("✅ HubSpot: New contact created with ID", contactId);
-    }
 
-    // 📝 Add note to HubSpot contact
-    const noteText = `
-Subscription Agreement sent to ${contractData.Customer_Contact || "Customer"} at ${email}.
+      const taskId = taskResponse.data.id;
 
-Guardrails Summary:
-- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
-- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
-- Device Lower Limit: ${contractData.deviceLowerLimit}
-- Device Upper Limit: ${contractData.deviceUpperLimit}
-`;
-    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days from now
-
-    await axios.post(
-      "https://api.hubapi.com/crm/v3/objects/tasks",
-      {
-        properties: {
-          hs_task_subject: "QBR – Review Customer Subscription",
-          hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
-
-Guardrails:
-- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
-- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
-- Device Lower Limit: ${contractData.deviceLowerLimit}
-- Device Upper Limit: ${contractData.deviceUpperLimit}
-
-Scenario: ${contractData.Scenario_URL}`,
-          hs_task_priority: "HIGH",
-          hs_timestamp: taskDueDate,
-          hubspot_owner_id: existingContact?.properties?.hubspot_owner_id
+      // Step 3: Associate task with contact
+      await axios.post(
+        `https://api.hubapi.com/crm/v3/associations/tasks/contacts/batch/create`,
+        {
+          inputs: [
+            {
+              from: { id: taskId },
+              to: { id: contactId },
+              types: [
+                {
+                  associationCategory: "HUBSPOT_DEFINED",
+                  associationTypeId: 3
+                }
+              ]
+            }
+          ]
         },
-        associations: [
-          {
-            toObjectId: contactId,
-            associationTypeId: 3 // Contact to Task
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
           }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${hubspotApiToken}`,
-          "Content-Type": "application/json"
         }
-      }
-    );
-    //console.log(`📝 HubSpot: Note added to contact ID ${contactId}`);
+      );
 
-  } catch (err) {
-    console.warn("⚠️ HubSpot error (non-blocking):", err.response?.data || err.message);
-  }
+      res.status(200).send({ message: "Task created and associated with contact." });
+    } catch (error) {
+      console.error("HubSpot task creation error:", error.response?.data || error.message);
+      res.status(500).send({ error: "HubSpot task creation failed." });
+    }
+  });
+
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
 
   try {
     const accessToken = await getAccessToken();
