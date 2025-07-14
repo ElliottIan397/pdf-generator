@@ -202,23 +202,20 @@ Guardrails Summary:
                   anchorXOffset: "20",
                 },
               ],
-              hyperlinkTabs: [
+              textTabs: [
                 {
-                  tabLabel: "ScenarioLink",
-                  anchorString: "SCENARIO_LINK_ANCHOR",  // must exactly match PDF text
-                  anchorUnits: "pixels",
-                  anchorYOffset: "0",
-                  anchorXOffset: "0",
-                  font: "helvetica",
-                  fontSize: "Size12",
-                  fontColor: "BrightRed",
-                  bold: true,
+                  name: contractData.Scenario_URL,
                   value: "Click here to view scenario",
-                  url: contractData.Scenario_URL,
+                  required: "true",
+                  locked: "true",
+                  tabLabel: "#HREF_ScenarioLink",
                   documentId: "1",
-                  pageNumber: "6",     // required fallback
-                  recipientId: "1",    // only Signer 1 sees it
-                  required: false
+                  recipientId: "1",
+                  pageNumber: "6",
+                  xPosition: "100",
+                  yPosition: "600",
+                  tabType: "text",
+                  tooltip: contractData.Scenario_URL
                 }
               ]
             }
