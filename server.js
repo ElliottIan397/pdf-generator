@@ -94,145 +94,6 @@ app.post("/send-envelope", async (req, res) => {
     return res.status(400).json({ error: "Missing Customer_Email." });
   }
 
-
-  app.post("/send-envelope", async (req, res) => {
-    const contractData = req.body;
-    console.log("🧬 Scenario_URL received:", contractData.Scenario_URL);
-
-    if (!contractData.Customer_Email) {
-      return res.status(400).json({ error: "Missing Customer_Email." });
-    }
-    const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
-    const internalApiBase = process.env.INTERNAL_API_BASE || `http://localhost:${PORT}`;
-
-    try {
-      // Simulate sending envelope to DocuSign
-      console.log("✅ DocuSign envelope sent for", contractData.Customer_Email);
-
-      // Trigger HubSpot task creation
-      await axios.post(`${internalApiBase}/send-to-hubspot`, contractData);
-
-      res.status(200).json({ message: "Envelope sent and HubSpot task created." });
-    } catch (error) {
-      console.error("❌ Error in /send-envelope:", error.response?.data || error.message);
-      res.status(500).send("Envelope or HubSpot integration failed.");
-    }
-  });
-
-  app.post("/send-to-hubspot", async (req, res) => {
-    const contractData = req.body;
-    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-
-    try {
-      // Step 1: Search for existing contact
-      const searchRes = await axios.post(
-        "https://api.hubapi.com/crm/v3/objects/contacts/search",
-        {
-          filterGroups: [
-            {
-              filters: [
-                {
-                  propertyName: "email",
-                  operator: "EQ",
-                  value: contractData.Customer_Email
-                }
-              ]
-            }
-          ]
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${hubspotApiToken}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      let contactId = null;
-      if (searchRes.data.results.length > 0) {
-        contactId = searchRes.data.results[0].id;
-      } else {
-        // Create new contact if not found
-        const createContact = await axios.post(
-          "https://api.hubapi.com/crm/v3/objects/contacts",
-          {
-            properties: {
-              email: contractData.Customer_Email,
-              firstname: contractData.Customer_Name
-            }
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${hubspotApiToken}`,
-              "Content-Type": "application/json"
-            }
-          }
-        );
-        contactId = createContact.data.id;
-      }
-
-      // Step 2: Create the task
-      const taskResponse = await axios.post(
-        "https://api.hubapi.com/crm/v3/objects/tasks",
-        {
-          properties: {
-            hs_task_subject: "QBR – Review Customer Subscription",
-            hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
-
-Guardrails:
-- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
-- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
-- Device Lower Limit: ${contractData.deviceLowerLimit}
-- Device Upper Limit: ${contractData.deviceUpperLimit}
-
-Scenario: ${contractData.Scenario_URL}`,
-            hs_task_priority: "HIGH",
-            hs_timestamp: taskDueDate,
-            hubspot_owner_id: contractData.hubspot_owner_id || undefined
-          }
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${hubspotApiToken}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      const taskId = taskResponse.data.id;
-
-      // Step 3: Associate task with contact
-      await axios.post(
-        `https://api.hubapi.com/crm/v3/associations/tasks/contacts/batch/create`,
-        {
-          inputs: [
-            {
-              from: { id: taskId },
-              to: { id: contactId },
-              types: [
-                {
-                  associationCategory: "HUBSPOT_DEFINED",
-                  associationTypeId: 3
-                }
-              ]
-            }
-          ]
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${hubspotApiToken}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      res.status(200).send({ message: "Task created and associated with contact." });
-    } catch (error) {
-      console.error("HubSpot task creation error:", error.response?.data || error.message);
-      res.status(500).send({ error: "HubSpot task creation failed." });
-    }
-  });
-
   //app.listen(port, () => {
   //console.log(`Server listening on port ${port}`);
   //});
@@ -347,6 +208,120 @@ Scenario: ${contractData.Scenario_URL}`,
   }
 });
 
+app.post("/send-to-hubspot", async (req, res) => {
+  const contractData = req.body;
+  const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
+  const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+
+  try {
+    // Step 1: Search for existing contact
+    const searchRes = await axios.post(
+      "https://api.hubapi.com/crm/v3/objects/contacts/search",
+      {
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName: "email",
+                operator: "EQ",
+                value: contractData.Customer_Email
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    let contactId = null;
+    if (searchRes.data.results.length > 0) {
+      contactId = searchRes.data.results[0].id;
+    } else {
+      // Create new contact if not found
+      const createContact = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/contacts",
+        {
+          properties: {
+            email: contractData.Customer_Email,
+            firstname: contractData.Customer_Name
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      contactId = createContact.data.id;
+    }
+
+    // Step 2: Create the task
+    const taskResponse = await axios.post(
+      "https://api.hubapi.com/crm/v3/objects/tasks",
+      {
+        properties: {
+          hs_task_subject: "QBR – Review Customer Subscription",
+          hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+
+Guardrails:
+- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
+- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
+- Device Lower Limit: ${contractData.deviceLowerLimit}
+- Device Upper Limit: ${contractData.deviceUpperLimit}
+
+Scenario: ${contractData.Scenario_URL}`,
+          hs_task_priority: "HIGH",
+          hs_timestamp: taskDueDate,
+          hubspot_owner_id: contractData.hubspot_owner_id || undefined
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const taskId = taskResponse.data.id;
+
+    // Step 3: Associate task with contact
+    await axios.post(
+      `https://api.hubapi.com/crm/v3/associations/tasks/contacts/batch/create`,
+      {
+        inputs: [
+          {
+            from: { id: taskId },
+            to: { id: contactId },
+            types: [
+              {
+                associationCategory: "HUBSPOT_DEFINED",
+                associationTypeId: 3
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    res.status(200).send({ message: "Task created and associated with contact." });
+  } catch (error) {
+    console.error("HubSpot task creation error:", error.response?.data || error.message);
+    res.status(500).send({ error: "HubSpot task creation failed." });
+  }
+});
 /*
 app.post("/docusign-webhook", async (req, res) => {
   //console.log("📩 Webhook payload:", JSON.stringify(req.body, null, 2));
