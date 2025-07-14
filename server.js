@@ -209,10 +209,11 @@ Guardrails Summary:
                   url: contractData.Scenario_URL,
                   documentId: "1",
                   pageNumber: "1",
-                  xPosition: "100",
-                  yPosition: "150",
+                  xPosition: "400",
+                  yPosition: "50",
                   font: "helvetica",
                   fontSize: "Size12",
+                  fontColor: "red",
                   bold: true
                 }
               ]
