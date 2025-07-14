@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
-const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
+const hubspotApiToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN;
 
 // ✅ CORS setup
 app.use(cors({
