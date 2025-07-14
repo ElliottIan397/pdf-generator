@@ -202,7 +202,21 @@ Guardrails Summary:
                   anchorXOffset: "20",
                 },
               ],
-            },
+              hyperlinkTabs: [
+                {
+                  tabLabel: "ScenarioLink",
+                  value: "Click here to view the scenario",
+                  url: contractData.Scenario_URL,
+                  documentId: "1",
+                  pageNumber: "1",
+                  xPosition: "100",
+                  yPosition: "150",
+                  font: "helvetica",
+                  fontSize: "Size12",
+                  bold: true
+                }
+              ]
+            }
           },
           {
             email: contractData.Customer_Email,
