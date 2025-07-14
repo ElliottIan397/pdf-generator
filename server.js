@@ -159,8 +159,7 @@ Guardrails Summary:
       {
         properties: {
           hs_task_subject: "QBR – Review Customer Subscription",
-          hs_task_body: `
-Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+          hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
 
 Guardrails:
 - Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
@@ -168,16 +167,15 @@ Guardrails:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}
 
-Scenario: ${contractData.Scenario_URL}
-`,
+Scenario: ${contractData.Scenario_URL}`,
           hs_task_priority: "HIGH",
           hs_timestamp: taskDueDate,
           hubspot_owner_id: existingContact?.properties?.hubspot_owner_id
         },
         associations: [
           {
-            to: { id: contactId },
-            types: [{ associationCategory: "HUBSPOT_DEFINED", associationTypeId: 3 }]
+            toObjectId: contactId,
+            associationTypeId: 3 // Contact to Task
           }
         ]
       },
