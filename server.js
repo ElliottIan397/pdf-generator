@@ -95,7 +95,7 @@ app.post("/send-envelope", async (req, res) => {
   }
 
   const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
-  const internalApiBase = process.env.INTERNAL_API_BASE || `http://localhost:${port}`;
+  const internalApiBase = process.env.INTERNAL_API_BASE || `http://localhost:${PORT}`;
 
   app.post("/send-envelope", async (req, res) => {
     const contractData = req.body;
