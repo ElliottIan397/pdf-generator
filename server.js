@@ -210,9 +210,9 @@ Scenario: ${contractData.Scenario_URL}`,
     }
   });
 
-  app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-  });
+  //app.listen(port, () => {
+    //console.log(`Server listening on port ${port}`);
+  //});
 
   try {
     const accessToken = await getAccessToken();
