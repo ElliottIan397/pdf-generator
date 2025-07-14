@@ -152,12 +152,34 @@ Guardrails Summary:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}
 `;
+    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days out
+
     await axios.post(
-      "https://api.hubapi.com/engagements/v1/engagements",
+      "https://api.hubapi.com/crm/v3/objects/tasks",
       {
-        engagement: { active: true, type: "NOTE" },
-        associations: { contactIds: [contactId] },
-        metadata: { body: noteText }
+        properties: {
+          subject: "QBR – Review Customer Subscription",
+          notes: `
+Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+
+Guardrails:
+- Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
+- Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
+- Device Lower Limit: ${contractData.deviceLowerLimit}
+- Device Upper Limit: ${contractData.deviceUpperLimit}
+
+Scenario: ${contractData.Scenario_URL}
+`,
+          hs_task_priority: "HIGH",
+          hs_timestamp: taskDueDate,
+          hubspot_owner_id: existingContact.properties?.hubspot_owner_id || undefined
+        },
+        associations: [
+          {
+            to: { id: contactId },
+            types: [{ associationCategory: "HUBSPOT_DEFINED", associationTypeId: 3 }]
+          }
+        ]
       },
       {
         headers: {
