@@ -213,7 +213,7 @@ Guardrails Summary:
                   anchorYOffset: "0",
                   font: "helvetica",
                   fontSize: "Size12",
-                  fontColor: "blue",
+                  fontColor: "#0000FF",
                   locked: true
                 }
               ]
