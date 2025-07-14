@@ -95,6 +95,25 @@ app.post("/send-envelope", async (req, res) => {
   }
 
   const hubspotApiToken = process.env.HUBSPOT_API_TOKEN;
+  const internalApiBase = process.env.INTERNAL_API_BASE || `http://localhost:${port}`;
+
+  app.post("/send-envelope", async (req, res) => {
+    const contractData = req.body;
+    console.log("🧬 Scenario_URL received:", contractData.Scenario_URL);
+
+    try {
+      // Simulate sending envelope to DocuSign (placeholder)
+      console.log("✅ DocuSign envelope sent for", contractData.Customer_Email);
+
+      // Trigger HubSpot task creation
+      await axios.post(`${internalApiBase}/send-to-hubspot`, contractData);
+
+      res.status(200).json({ message: "Envelope sent and HubSpot task created." });
+    } catch (error) {
+      console.error("❌ Error in /send-envelope:", error.response?.data || error.message);
+      res.status(500).send("Envelope or HubSpot integration failed.");
+    }
+  });
 
   app.post("/send-to-hubspot", async (req, res) => {
     const contractData = req.body;
@@ -211,7 +230,7 @@ Scenario: ${contractData.Scenario_URL}`,
   });
 
   //app.listen(port, () => {
-    //console.log(`Server listening on port ${port}`);
+  //console.log(`Server listening on port ${port}`);
   //});
 
   try {
