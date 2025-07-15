@@ -277,7 +277,7 @@ Guardrails:
 - Device Upper Limit: ${contractData.deviceUpperLimit}`,
       hs_task_priority: "HIGH",
       hs_timestamp: taskDueDate,
-      hs_task_type: "TASK"
+      hs_task_type: "TODO"
     }
   },
   {
