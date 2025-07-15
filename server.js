@@ -274,10 +274,9 @@ Guardrails:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}`,
     hs_task_priority: "HIGH",
-    hs_timestamp: taskDueDate,
-    hs_task_type: "TODO"  // ✅ Confirmed as valid
-  },
-  type: "task"  // ✅ THIS IS MANDATORY
+    //hs_timestamp: taskDueDate, remove for test
+    hs_task_type: "TODO"
+  }
 };
 
 console.log("📤 HubSpot Task Payload:", JSON.stringify(taskPayload, null, 2));
