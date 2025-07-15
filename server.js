@@ -278,8 +278,10 @@ Guardrails:
       hs_task_priority: "HIGH",
       hs_timestamp: taskDueDate,
       hs_task_type: "TODO"
-    }
+    },
+    type: "TASK" // ✅ TOP-LEVEL FIELD
   },
+  
   {
     headers: {
       Authorization: `Bearer ${hubspotApiToken}`,
