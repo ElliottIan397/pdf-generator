@@ -300,8 +300,7 @@ Guardrails:
             types: [
               {
                 associationCategory: "HUBSPOT_DEFINED",
-                associationTypeId: 3,
-                type: "contact_to_task"
+                associationTypeId: 3
               }
             ]
           }
