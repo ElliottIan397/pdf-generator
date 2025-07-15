@@ -305,12 +305,7 @@ Guardrails:
           {
             from: { id: taskId },
             to: { id: contactId },
-            types: [
-              {
-                associationCategory: "HUBSPOT_DEFINED",
-                associationTypeId: 3
-              }
-            ]
+            type: "task_to_contact"
           }
         ]
       },
