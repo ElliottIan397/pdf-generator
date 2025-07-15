@@ -276,7 +276,8 @@ Guardrails:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}`,
       hs_task_priority: "HIGH",
-      hs_timestamp: taskDueDate
+      hs_timestamp: taskDueDate,
+      hs_task_type: "TASK"
     }
   },
   {
@@ -300,8 +301,7 @@ Guardrails:
             types: [
               {
                 associationCategory: "HUBSPOT_DEFINED",
-                associationTypeId: 3,
-                type: "task_to_contact"
+                associationTypeId: 3                
               }
             ]
           }
