@@ -303,7 +303,8 @@ Scenario: ${contractData.Scenario_URL}`,
             types: [
               {
                 associationCategory: "HUBSPOT_DEFINED",
-                associationTypeId: 3
+                associationTypeId: 3,
+                type: "contact_to_task"
               }
             ]
           }
