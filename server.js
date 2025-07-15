@@ -262,33 +262,30 @@ app.post("/send-to-hubspot", async (req, res) => {
       contactId = createContact.data.id;
     }
 
-    // Step 2: Create the task
-    const taskResponse = await axios.post(
-      "https://api.hubapi.com/crm/v3/objects/tasks",
-      {
-        properties: {
-          hs_task_subject: "QBR – Review Customer Subscription",
-          hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+// Step 2: Create the task
+const taskResponse = await axios.post(
+  "https://api.hubapi.com/crm/v3/objects/tasks",
+  {
+    properties: {
+      hs_task_subject: "QBR – Review Customer Subscription",
+      hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
 
 Guardrails:
 - Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
 - Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
 - Device Lower Limit: ${contractData.deviceLowerLimit}
-- Device Upper Limit: ${contractData.deviceUpperLimit}
-
-Scenario: ${contractData.Scenario_URL}`,
-          hs_task_priority: "HIGH",
-          hs_timestamp: taskDueDate,
-          hubspot_owner_id: contractData.hubspot_owner_id || undefined
-        }
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${hubspotApiToken}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
+- Device Upper Limit: ${contractData.deviceUpperLimit}`,
+      hs_task_priority: "HIGH",
+      hs_timestamp: taskDueDate
+    }
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${hubspotApiToken}`,
+      "Content-Type": "application/json"
+    }
+  }
+);
 
     const taskId = taskResponse.data.id;
 
