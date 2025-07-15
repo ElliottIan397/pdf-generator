@@ -294,13 +294,18 @@ Scenario: ${contractData.Scenario_URL}`,
 
     // Step 3: Associate task with contact
     await axios.post(
-      `https://api.hubapi.com/crm/v3/associations/tasks-contacts/batch/create`,
+      `https://api.hubapi.com/crm/v3/associations/tasks/contacts/batch/create`,
       {
         inputs: [
           {
             from: { id: taskId },
             to: { id: contactId },
-            type: "task_to_contact"
+            types: [
+              {
+                associationCategory: "HUBSPOT_DEFINED",
+                associationTypeId: 3
+              }
+            ]
           }
         ]
       },
