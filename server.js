@@ -263,35 +263,34 @@ app.post("/send-to-hubspot", async (req, res) => {
     }
 
     // Step 2: Create the task
-    const taskPayload = {
-      properties: {
-        hs_task_subject: "QBR – Review Customer Subscription",
-        hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
+const taskPayload = {
+  properties: {
+    hs_task_subject: "QBR – Review Customer Subscription",
+    hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
 
 Guardrails:
 - Fleet Output Avg. Mth. Lower Limit: ${contractData.volumeLowerLimit}
 - Fleet Output Avg. Mth. Upper Limit: ${contractData.volumeUpperLimit}
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}`,
-        hs_task_priority: "HIGH",
-        hs_timestamp: taskDueDate,
-        hs_task_type: "TODO"
-      },
-      type: "TASK"
-    };
+    hs_task_priority: "HIGH",
+    hs_timestamp: taskDueDate,
+    hs_task_type: "TASK"  // ✅ Confirmed as valid
+  }
+};
 
-    console.log("📤 HubSpot Task Payload:", JSON.stringify(taskPayload, null, 2));
+console.log("📤 HubSpot Task Payload:", JSON.stringify(taskPayload, null, 2));
 
-    const taskResponse = await axios.post(
-      "https://api.hubapi.com/crm/v3/objects/tasks",
-      taskPayload,
-      {
-        headers: {
-          Authorization: `Bearer ${hubspotApiToken}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
+const taskResponse = await axios.post(
+  "https://api.hubapi.com/crm/v3/objects/tasks",
+  taskPayload,
+  {
+    headers: {
+      Authorization: `Bearer ${hubspotApiToken}`,
+      "Content-Type": "application/json"
+    }
+  }
+);
 
     const taskId = taskResponse.data.id;
 
