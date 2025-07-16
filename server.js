@@ -116,8 +116,8 @@ app.post("/send-envelope", async (req, res) => {
       recipients: {
         signers: [
           {
-            email: contractData.Dealer_Email || "IanElliott@MidTennOP.com",
-            name: contractData.Dealer_Name || "Dealer Signatory",
+            email: "IanElliott@MidTennOP.com", // ✅ always Boss Man
+            name: "Dealer Signatory",
             recipientId: "1",
             routingOrder: "1", // ✅ Dealer signs first
             tabs: {
