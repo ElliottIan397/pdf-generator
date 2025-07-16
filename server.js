@@ -262,6 +262,52 @@ app.post("/send-to-hubspot", async (req, res) => {
       contactId = createContact.data.id;
     }
 
+    // Step 1b: Search or create Dealer Rep contact
+    let dealerContactId = null;
+    const dealerSearchRes = await axios.post(
+      "https://api.hubapi.com/crm/v3/objects/contacts/search",
+      {
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName: "email",
+                operator: "EQ",
+                value: contractData.Dealer_Email
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hubspotApiToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (dealerSearchRes.data.results.length > 0) {
+      dealerContactId = dealerSearchRes.data.results[0].id;
+    } else {
+      const createDealerContact = await axios.post(
+        "https://api.hubapi.com/crm/v3/objects/contacts",
+        {
+          properties: {
+            email: contractData.Dealer_Email,
+            firstname: contractData.Dealer_Name || "Dealer Rep"
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${hubspotApiToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      dealerContactId = createDealerContact.data.id;
+    }
+
     // Step 2: Create the task
 
     const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
@@ -297,14 +343,14 @@ Guardrails:
     const taskId = taskResponse.data.id;
 
 
-    // Step 3: Associate task with contact
+    // Step 3: Associate task with dealer rep contact
     await axios.post(
       `https://api.hubapi.com/crm/v3/associations/tasks/contacts/batch/create`,
       {
         inputs: [
           {
             from: { id: taskId },
-            to: { id: contactId },
+            to: { id: dealerContactId },
             type: "task_to_contact"
           }
         ]
