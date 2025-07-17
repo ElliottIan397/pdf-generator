@@ -326,7 +326,8 @@ Guardrails:
         hs_task_priority: "HIGH",
         hs_timestamp: taskDue.getTime(),   // ✅ epoch milliseconds
         hs_task_type: "TODO",
-        hs_task_reminders: reminder.getTime() // ✅ sets the reminder
+        hs_task_reminders: reminder.getTime(), // ✅ sets the reminder
+        hs_task_monitor: contractData.Customer_Name || "Customer" // ✅ added monitor
       }
     };
 
@@ -353,7 +354,7 @@ Guardrails:
         inputs: [
           {
             from: { id: taskId },
-            to: { id: dealerContactId },
+            to: { id: contactId },
             type: "task_to_contact"
           }
         ]
