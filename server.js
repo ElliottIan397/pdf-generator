@@ -38,7 +38,7 @@ app.get("/env-check", (req, res) => {
 app.options("*", cors());
 
 // ✅ JSON parser
-app.use(bodyParser.json({ limit: "2mb" }));
+app.use(bodyParser.json({ limit: "10mb" }));
 
 // ✅ Logging helper
 app.use((req, res, next) => {
