@@ -310,8 +310,8 @@ app.post("/send-to-hubspot", async (req, res) => {
 
     // Step 2: Create the task
 
-    const taskDueDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-    const reminderDate = new Date(Date.now() + 76 * 24 * 60 * 60 * 1000).toISOString(); // 14 days prior
+    const taskDue = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);   // 90-day due date
+    const reminder = new Date(Date.now() + 76 * 24 * 60 * 60 * 1000);   // 14-day advance
 
     const taskPayload = {
       properties: {
@@ -324,9 +324,9 @@ Guardrails:
 - Device Lower Limit: ${contractData.deviceLowerLimit}
 - Device Upper Limit: ${contractData.deviceUpperLimit}`,
         hs_task_priority: "HIGH",
-        hs_timestamp: taskDueDate,
+        hs_timestamp: taskDue.getTime(),   // ✅ epoch milliseconds
         hs_task_type: "TODO",
-        hs_task_reminders: reminderDate // ✅ sets the reminder
+        hs_task_reminders: reminder.getTime() // ✅ sets the reminder
       }
     };
 
