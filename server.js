@@ -315,7 +315,7 @@ app.post("/send-to-hubspot", async (req, res) => {
 
     const taskPayload = {
       properties: {
-        hs_task_subject: "QBR – Review Customer Subscription",
+        hs_task_subject: `QBR – Review Customer Subscription: ${contractData.Customer_Name || "Customer"}`,
         hs_task_body: `Subscription Agreement initiated for ${contractData.Customer_Contact || "Customer"}.
 
 Guardrails:
@@ -326,8 +326,7 @@ Guardrails:
         hs_task_priority: "HIGH",
         hs_timestamp: taskDue.getTime(),   // ✅ epoch milliseconds
         hs_task_type: "TODO",
-        hs_task_reminders: reminder.getTime(), // ✅ sets the reminder
-        hs_task_monitor: contractData.Customer_Name || "Customer" // ✅ added monitor
+        hs_task_reminders: reminder.getTime(), // ✅ sets the reminder        
       }
     };
 

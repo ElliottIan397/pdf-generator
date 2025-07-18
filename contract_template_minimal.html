@@ -39,14 +39,13 @@
     h4 {
       margin-top: 1.5em;
     }
-
   </style>
 </head>
 
 
 <body>
   <h1>Subscription Agreement</h1>
-     <p><strong>Customer:</strong> {{Customer_Name}}</p>
+  <p><strong>Customer:</strong> {{Customer_Name}}</p>
   <p><strong>Customer Address:</strong> {{Customer_Address_Line1}}, {{Customer_Address_Line2}}, {{Customer_City}},
     {{Customer_State}}, {{Customer_Zip}}</p>
   <p><strong>Sales Rep:</strong> {{Dealer_SalesRep_Name}}</p>
@@ -203,18 +202,19 @@
     in the monthly subscription fee. Expedited or special delivery services requested by the Customer may incur
     additional charges.</p>
   <p><strong>Fulfillment Protocols:</strong><br />
-    The fulfillment of ink and toner supplies is automated based on device monitoring. Thresholds are determined by
-    either the number of days remaining or percentage remaining, depending on the specific device’s tracking
-    capabilities. Our goal is to optimize cartridge usage and prevent premature replacement.</p>
+    The fulfillment of ink and toner supplies is automated based on device monitoring. Replacement thresholds are
+    determined by the number of days remaining and/or percentage of cartridge remaining. Our goal is to optimize
+    cartridge usage and prevent premature replacement.</p>
   <p>To support accurate fulfillment and reduce loss:</p>
   <ul>
-    <li>Customer is encouraged to provide the name and email address of the individual responsible for each device.
+    <li>Customer to provide the name and email address of the individual responsible for each device.
     </li>
-    <li>This facilitates timely delivery notifications and reduce the incidence of misplaced or unclaimed
+    <li>This facilitates timely delivery notifications and reduces the incidence of misplaced or unclaimed
       supplies.</li>
-    <li>It is common for devices to display low-toner warnings at levels such as 15–20%. These alerts are often
+    <li>It is common for devices to display low-toner warnings at levels such as 15–20%. While helpful, these alerts are
+      often
       triggered prematurely by OEM firmware.</li>
-    <li>The program is designed to help users confidently run cartridges to true depletion, minimizing waste and
+    <li>The subscription program is designed to help users confidently run cartridges to depletion, minimizing waste and
       avoiding unnecessary shipments.</li>
   </ul>
   <p>Customers agree to make best efforts to follow this approach, as repeated premature replacements may result in
@@ -252,11 +252,13 @@
   <h3>Signature Page – Subscription Agreement</h3>
   <h4> Dealer Authorized Signatory</h4>
   <p>Name: {{Dealer_SalesRep_Name}}</p><br />
-  <p>Signature: <span style="color: white; font-size: 1px;">/sign_here_dealer/</span>________________________ Date: {{Contract_Effective_Date}} </p><br />
+  <p>Signature: <span style="color: white; font-size: 1px;">/sign_here_dealer/</span>________________________ Date:
+    {{Contract_Effective_Date}} </p><br />
   <h4> Customer Authorized Signatory</h4>
   <p>Name: {{Customer_Rep_Name}}</p><br />
-  <p>Signature: <span style="color: white; font-size: 1px;">/sign_here_customer/</span>________________________ Date: {{Contract_Effective_Date}} </p><br />
- 
+  <p>Signature: <span style="color: white; font-size: 1px;">/sign_here_customer/</span>________________________ Date:
+    {{Contract_Effective_Date}} </p><br />
+
   <div class="page-break"></div>
   <h2>Addenda</h2>
   <p><em><strong>Addendum 1: SKU Bias Terms</strong></em></p>
